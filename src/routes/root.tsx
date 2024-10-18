@@ -4,11 +4,8 @@ import WebApp from '@twa-dev/sdk';
 import LayoutContainer from 'components/layout/LayoutContainer';
 import ThemeControlSwitch from 'components/ThemeControlSwitch';
 
-WebApp.ready();
-
-function App() {
+const Root = () => {
   const [count, setCount] = useState(0);
-
   return (
     <LayoutContainer>
       <h1>WebTON</h1>
@@ -30,6 +27,6 @@ function App() {
       <ThemeControlSwitch />
     </LayoutContainer>
   );
-}
+};
 
-export default App;
+export default Root;
