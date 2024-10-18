@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import WebApp from '@twa-dev/sdk';
 
-import './App.css';
+import LayoutContainer from 'components/layout/LayoutContainer';
+import ThemeControlSwitch from 'components/ThemeControlSwitch';
 
 WebApp.ready();
 
@@ -9,15 +10,12 @@ function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <>
+    <LayoutContainer>
       <h1>WebTON</h1>
       <div className="card">
         <button onClick={() => setCount((prevState) => prevState + 1)}>
           count is {count}
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
       </div>
 
       <div className="card">
@@ -29,7 +27,8 @@ function App() {
           Show Alert
         </button>
       </div>
-    </>
+      <ThemeControlSwitch />
+    </LayoutContainer>
   );
 }
 

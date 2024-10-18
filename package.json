@@ -13,11 +13,17 @@
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {
+    "@nextui-org/react": "^2.4.8",
     "@twa-dev/sdk": "^7.10.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.11.9",
+    "next-themes": "^0.3.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.15",
     "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^14.1.2",
     "@testing-library/user-event": "^14.5.2",
@@ -28,6 +34,7 @@
     "@vitejs/plugin-react-swc": "^3.7.1",
     "@vitest/coverage-v8": "^2.1.3",
     "@vitest/eslint-plugin": "^1.1.7",
+    "autoprefixer": "^10.4.20",
     "eslint": "8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
@@ -40,9 +47,12 @@
     "eslint-plugin-testing-library": "^6.2.0",
     "jsdom": "^25.0.1",
     "msw": "^2.4.11",
+    "postcss": "^8.4.47",
     "prettier": "^3.3.3",
+    "tailwindcss": "^3.4.14",
     "typescript": "5.5.4",
     "vite": "^5.4.9",
+    "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.1.3"
   }
 }
