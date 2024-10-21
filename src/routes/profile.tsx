@@ -37,17 +37,19 @@ const Profile = () => {
 
   return (
     <LayoutContainer>
-      <Listbox aria-label="Actions" onAction={handleAction}>
-        {list.map((item) => (
-          <ListboxItem
-            key={item.key}
-            color="primary"
-            endContent={<FaChevronRight size={20} />}
-          >
-            <p className="text-xl">{item.text}</p>
-          </ListboxItem>
-        ))}
-      </Listbox>
+      <div className="py-4">
+        <Listbox aria-label="Actions" onAction={handleAction}>
+          {list.map((item) => (
+            <ListboxItem
+              key={item.key}
+              color="primary"
+              endContent={<FaChevronRight size={20} />}
+            >
+              <p className="text-xl">{item.text}</p>
+            </ListboxItem>
+          ))}
+        </Listbox>
+      </div>
     </LayoutContainer>
   );
 };
