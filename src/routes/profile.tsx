@@ -1,6 +1,9 @@
 import { Listbox, ListboxItem } from '@nextui-org/react';
 import { FaChevronRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { format } from 'date-fns/format';
+
+import useTelegramAuth from 'hooks/useTelegramAuth';
 
 import LayoutContainer from 'components/layout/LayoutContainer';
 
@@ -26,6 +29,8 @@ const list: ListItem[] = [
 ];
 
 const Profile = () => {
+  const { isTelegramView, telegramAuthData } = useTelegramAuth();
+
   const navigate = useNavigate();
 
   const handleAction = (key: Key) => {
@@ -38,6 +43,30 @@ const Profile = () => {
   return (
     <LayoutContainer>
       <div className="py-4">
+        {isTelegramView && telegramAuthData.user && (
+          <div className="flex flex-col gap-1 px-3 mb-4 text-xs overflow-hidden break-all">
+            <div className="grid grid-cols-2">
+              <p>id: {telegramAuthData.user.id}</p>
+              <p>firstName: {telegramAuthData.user.firstName}</p>
+              <p>lastName: {telegramAuthData.user.lastName}</p>
+              <p>username: {telegramAuthData.user.username}</p>
+              <p>languageCode: {telegramAuthData.user.languageCode}</p>
+              <p>isPremium: {telegramAuthData.user.isPremium?.toString()}</p>
+              <p>
+                allowsWriteToPm:{' '}
+                {telegramAuthData.user.allowsWriteToPm?.toString()}
+              </p>
+            </div>
+            {telegramAuthData.authDate && (
+              <p>authDate: {format(telegramAuthData.authDate, 'dd/MM/yyyy')}</p>
+            )}
+            <p>startParam: {telegramAuthData.startParam}</p>
+            <p>chatType: {telegramAuthData.chatType}</p>
+            <p>chatInstance: {telegramAuthData.chatInstance}</p>
+            <p>hash: {telegramAuthData.hash}</p>
+          </div>
+        )}
+
         <Listbox aria-label="Actions" onAction={handleAction}>
           {list.map((item) => (
             <ListboxItem

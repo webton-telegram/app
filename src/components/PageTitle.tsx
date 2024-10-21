@@ -7,7 +7,7 @@ type Props = {
 
 const PageTitle = ({ children, endContent }: Props) => (
   <div className="flex items-center justify-between">
-    <p className="text-2xl">{children}</p>
+    <p className="text-xl">{children}</p>
     {endContent && endContent}
   </div>
 );

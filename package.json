@@ -14,8 +14,10 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.4.8",
+    "@telegram-apps/sdk": "^2.5.1",
     "@twa-dev/sdk": "^7.10.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "framer-motion": "^11.11.9",
     "next-themes": "^0.3.0",
     "react": "^18.3.1",
