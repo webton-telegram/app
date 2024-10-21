@@ -9,6 +9,8 @@ import Reward from 'routes/reward';
 import Query from 'routes/query';
 import Mission from 'routes/mission';
 import Profile from 'routes/profile';
+import Recently from 'routes/recently';
+import Recommended from 'routes/Recommended';
 
 import './index.css';
 
@@ -34,6 +36,14 @@ const router = createBrowserRouter([
   {
     path: '/profile',
     element: <Profile />,
+  },
+  {
+    path: '/profile/recently',
+    element: <Recently />,
+  },
+  {
+    path: '/profile/recommended',
+    element: <Recommended />,
   },
 ]);
 

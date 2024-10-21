@@ -16,7 +16,7 @@ const MainContainer = ({ children }: Props) => (
     <div className="relative flex flex-col w-full max-w-[500px] mx-auto lg:mx-0">
       <div
         className={cn(
-          'min-h-[calc(100vh-4rem)] bg-white',
+          'min-h-[calc(100vh-4rem)] p-5',
           'bg-white dark:bg-neutral-900',
           'text-neutral-950 dark:text-white',
         )}
