@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useMemo } from 'react';
 import {
   Dropdown,
   DropdownTrigger,
@@ -12,44 +12,15 @@ import Card from 'components/Card';
 import LayoutContainer from 'components/layout/LayoutContainer';
 import PageTitle from 'components/PageTitle';
 
-type SelectedItem = {
-  key: string;
-  text: string;
-};
-
-const selectedList: SelectedItem[] = [
-  {
-    key: 'all',
-    text: 'All',
-  },
-  {
-    key: 'today',
-    text: 'Today',
-  },
-  {
-    key: 'last7',
-    text: 'Last 7 Days',
-  },
-  {
-    key: 'last14',
-    text: 'Last 14 Days',
-  },
-  {
-    key: 'last30',
-    text: 'Last 30 Days',
-  },
-  {
-    key: 'last90',
-    text: 'Last 90 Days',
-  },
-];
+import cards from 'data/card';
+import selectedList from 'data/selectedBox';
 
 const Recommended = () => {
-  const [selectedKeys, setSelectedKeys] = React.useState(
+  const [selectedKeys, setSelectedKeys] = useState(
     new Set([selectedList[0].key]),
   );
 
-  const selectedText = React.useMemo(
+  const selectedText = useMemo(
     () =>
       selectedList.find(
         (item) =>
@@ -94,9 +65,9 @@ const Recommended = () => {
           Recommended Posts
         </PageTitle>
       </div>
-      <div className="grid grid-cols-2 gap-4 pb-4">
-        {new Array(20).fill(0).map((idx) => (
-          <Card key={`card-${idx}`} />
+      <div className="grid grid-cols-3 gap-4 pb-4">
+        {cards.map((card) => (
+          <Card key={`card-${card.title}`} {...card} />
         ))}
       </div>
     </LayoutContainer>
