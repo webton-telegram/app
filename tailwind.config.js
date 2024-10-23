@@ -1,4 +1,5 @@
 const { nextui } = require('@nextui-org/react');
+const { colors } = require('./src/styles/colors');
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -8,7 +9,9 @@ export default {
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors,
+    },
   },
   darkMode: 'class',
   plugins: [require('@tailwindcss/typography'), nextui()],
