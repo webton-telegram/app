@@ -3,9 +3,10 @@ import { cn } from 'lib/utils';
 
 type Props = {
   children: ReactNode;
+  isSpacing?: boolean;
 };
 
-const MainContainer = ({ children }: Props) => (
+const MainContainer = ({ children, isSpacing = true }: Props) => (
   <>
     <div
       className={cn(
@@ -16,9 +17,10 @@ const MainContainer = ({ children }: Props) => (
     <div className="relative flex flex-col w-full max-w-[500px] h-screen max-h-screen mx-auto lg:mx-0">
       <div
         className={cn(
-          'overflow-y-auto max-h-[calc(100vh-4rem)] px-4',
+          'overflow-y-auto max-h-[calc(100vh-4rem)]',
           'bg-white dark:bg-neutral-900',
           'text-neutral-950 dark:text-neutral-100',
+          isSpacing && 'px-4',
         )}
       >
         {children}

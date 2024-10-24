@@ -1,11 +1,14 @@
+import { useState } from 'react';
 import { Listbox, ListboxItem } from '@nextui-org/react';
 import { FaChevronRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns/format';
+import WebApp from '@twa-dev/sdk';
 
 import useTelegramAuth from 'hooks/useTelegramAuth';
 
 import LayoutContainer from 'components/layout/LayoutContainer';
+import ThemeControlSwitch from 'components/ThemeControlSwitch';
 
 type Key = string | number;
 
@@ -29,6 +32,7 @@ const list: ListItem[] = [
 ];
 
 const Profile = () => {
+  const [count, setCount] = useState(0);
   const { isTelegramView, telegramAuthData } = useTelegramAuth();
 
   const navigate = useNavigate();
@@ -43,6 +47,21 @@ const Profile = () => {
   return (
     <LayoutContainer>
       <div className="py-4">
+        <div className="card">
+          <button onClick={() => setCount((prevState) => prevState + 1)}>
+            count is {count}
+          </button>
+        </div>
+        <div className="card">
+          <button
+            onClick={() =>
+              WebApp.showAlert(`Hello World! Current count is ${count}`)
+            }
+          >
+            Show Alert
+          </button>
+        </div>
+        <ThemeControlSwitch />
         {isTelegramView && telegramAuthData.user && (
           <div className="flex flex-col gap-1 px-3 mb-4 text-xs overflow-hidden break-all">
             <div className="grid grid-cols-2">
