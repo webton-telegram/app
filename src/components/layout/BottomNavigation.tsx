@@ -15,7 +15,7 @@ const BottomNavigation = () => {
     <div
       className={cn(
         'fixed bottom-0 left-0 right-0 overflow-x-auto',
-        'flex justify-around items-center gap-2 w-full max-w-[500px] h-16 mx-auto',
+        'flex justify-around items-center gap-2 w-full max-w-[500px] h-20 mx-auto pb-3',
         'text-neutral-950 bg-white',
         'dark:text-neutral-100 dark:bg-neutral-900',
       )}
