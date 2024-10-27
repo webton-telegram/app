@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Listbox, ListboxItem } from '@nextui-org/react';
+import { Button, Listbox, ListboxItem } from '@nextui-org/react';
 import { FaChevronRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns/format';
@@ -9,6 +9,12 @@ import useTelegramAuth from 'hooks/useTelegramAuth';
 
 import LayoutContainer from 'components/layout/LayoutContainer';
 import ThemeControlSwitch from 'components/ThemeControlSwitch';
+import {
+  useIsConnectionRestored,
+  useTonAddress,
+  useTonConnectUI,
+} from '@tonconnect/ui-react';
+import useTonAddressInfo from 'hooks/useTonAddressInfo';
 
 type Key = string | number;
 
@@ -34,6 +40,20 @@ const list: ListItem[] = [
 const Profile = () => {
   const [count, setCount] = useState(0);
   const { isTelegramView, telegramAuthData } = useTelegramAuth();
+  const [tonConnectUI] = useTonConnectUI();
+  const userFriendlyAddress = useTonAddress();
+  const rawAddress = useTonAddress(false);
+  const connectionRestored = useIsConnectionRestored();
+
+  const { addressInfo } = useTonAddressInfo();
+
+  const handleDisconnect = async () => {
+    await tonConnectUI.disconnect();
+  };
+
+  const handleConnect = async () => {
+    await tonConnectUI.openModal();
+  };
 
   const navigate = useNavigate();
 
@@ -43,6 +63,10 @@ const Profile = () => {
 
     navigate(find.link);
   };
+
+  if (!connectionRestored) {
+    return <>Please wait...</>;
+  }
 
   return (
     <LayoutContainer>
@@ -85,6 +109,22 @@ const Profile = () => {
             <p>hash: {telegramAuthData.hash}</p>
           </div>
         )}
+
+        <div>
+          {tonConnectUI.connected ? (
+            <Button onClick={handleDisconnect}>Disconnect</Button>
+          ) : (
+            <Button onClick={handleConnect}>Connect wallet</Button>
+          )}
+
+          <div>
+            {userFriendlyAddress && (
+              <p>User-friendly address: {userFriendlyAddress}</p>
+            )}
+            {rawAddress && <p>Raw address: {rawAddress}</p>}
+            {addressInfo && <p>Balance: {addressInfo.balance} TON</p>}
+          </div>
+        </div>
 
         <Listbox aria-label="Actions" onAction={handleAction}>
           {list.map((item) => (
