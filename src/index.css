@@ -5,3 +5,8 @@
 body {
   overflow: hidden;
 }
+
+
+[data-tc-modal="true"] {
+  overflow-y: hidden;
+}
