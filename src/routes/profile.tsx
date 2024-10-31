@@ -10,15 +10,15 @@ import {
 } from '@nextui-org/react';
 import { FaChevronRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-
-import useTelegramAuth from 'hooks/useTelegramAuth';
-
-import LayoutContainer from 'components/layout/LayoutContainer';
 import {
   useIsConnectionRestored,
   useTonAddress,
   useTonConnectUI,
 } from '@tonconnect/ui-react';
+
+import LayoutContainer from 'components/layout/LayoutContainer';
+
+import useTelegramAuth from 'hooks/useTelegramAuth';
 import useTonAddressInfo from 'hooks/useTonAddressInfo';
 import { shortenAddress } from 'lib/utils';
 
@@ -47,16 +47,13 @@ const Profile = () => {
   const { isTelegramView, telegramAuthData } = useTelegramAuth();
   const [tonConnectUI] = useTonConnectUI();
   const userFriendlyAddress = useTonAddress();
-
   const connectionRestored = useIsConnectionRestored();
-
   const { addressInfo } = useTonAddressInfo();
+  const navigate = useNavigate();
 
   const handleConnect = async () => {
     await tonConnectUI.openModal();
   };
-
-  const navigate = useNavigate();
 
   const handleAction = (key: Key) => {
     const find = list.find((item) => item.key === key);
