@@ -4,8 +4,7 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Listbox,
-  ListboxItem,
+  Divider,
   Skeleton,
 } from '@nextui-org/react';
 import { FaChevronRight } from 'react-icons/fa';
@@ -16,32 +15,13 @@ import {
   useTonConnectUI,
 } from '@tonconnect/ui-react';
 
-import LayoutContainer from 'components/layout/LayoutContainer';
-
+import cards from 'data/card';
 import useTelegramAuth from 'hooks/useTelegramAuth';
 import useTonAddressInfo from 'hooks/useTonAddressInfo';
 import { shortenAddress } from 'lib/utils';
 
-type Key = string | number;
-
-type ListItem = {
-  key: Key;
-  text: string;
-  link: string;
-};
-
-const list: ListItem[] = [
-  {
-    key: 'recently',
-    text: 'Recently Viewed Posts',
-    link: '/profile/recently',
-  },
-  {
-    key: 'recommended',
-    text: 'Recommended Posts',
-    link: '/profile/recommended',
-  },
-];
+import LayoutContainer from 'components/layout/LayoutContainer';
+import ComicsItem from 'components/Card';
 
 const Profile = () => {
   const { isTelegramView, telegramAuthData } = useTelegramAuth();
@@ -55,11 +35,8 @@ const Profile = () => {
     await tonConnectUI.openModal();
   };
 
-  const handleAction = (key: Key) => {
-    const find = list.find((item) => item.key === key);
-    if (!find) return;
-
-    navigate(find.link);
+  const handleNavigate = (target: string) => () => {
+    navigate(target);
   };
 
   return (
@@ -141,17 +118,45 @@ const Profile = () => {
           </Card>
         )}
 
-        <Listbox aria-label="Actions" onAction={handleAction}>
-          {list.map((item) => (
-            <ListboxItem
-              key={item.key}
-              color="primary"
-              endContent={<FaChevronRight size={20} />}
+        <Divider />
+
+        <div className="flex flex-col gap-3">
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg">History</h2>
+            <button
+              className="flex justify-center items-center gap-1 text-default-500 text-sm"
+              onClick={handleNavigate('/profile/recently')}
             >
-              <p className="text-xl">{item.text}</p>
-            </ListboxItem>
-          ))}
-        </Listbox>
+              More <FaChevronRight size={12} />
+            </button>
+          </div>
+
+          <div className="relative z-0 grid grid-cols-3 gap-2 pb-4">
+            {cards.slice(0, 6).map((card) => (
+              <ComicsItem key={`history-${card.title}`} {...card} />
+            ))}
+          </div>
+        </div>
+
+        <Divider />
+
+        <div className="flex flex-col gap-3">
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg">Recommend</h2>
+            <button
+              className="flex justify-center items-center gap-1 text-default-500 text-sm"
+              onClick={handleNavigate('/profile/recommended')}
+            >
+              More <FaChevronRight size={12} />
+            </button>
+          </div>
+
+          <div className="relative z-0 grid grid-cols-3 gap-2 pb-4">
+            {cards.slice(0, 6).map((card) => (
+              <ComicsItem key={`recommend-${card.title}`} {...card} />
+            ))}
+          </div>
+        </div>
       </div>
     </LayoutContainer>
   );
