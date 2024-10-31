@@ -48,6 +48,17 @@ const Query = () => {
         />
       </div>
 
+      {!debouncedInput && (
+        <div className="flex flex-col gap-1">
+          <p className="text-xl">Recommended</p>
+          <div className="relative z-0 grid grid-cols-3 gap-2 pb-4">
+            {cards.map((card) => (
+              <Card key={`card-${card.title}`} {...card} />
+            ))}
+          </div>
+        </div>
+      )}
+
       {debouncedInput && filteredCards.length > 0 && (
         <div className="relative z-0 grid grid-cols-3 gap-2 pb-4">
           {filteredCards.map((card) => (

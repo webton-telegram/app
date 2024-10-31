@@ -38,7 +38,9 @@ const CustomCard = ({ img, title, writer, viewCount, likeCount }: Props) => (
         </div>
         <div className="flex items-center gap-1">
           <FaThumbsUp className="text-gray-400" />
-          <p className="text-xs text-gray-400">{likeCount}</p>
+          <div className="pt-[2px]">
+            <p className="text-xs text-gray-400">{likeCount}</p>
+          </div>
         </div>
       </div>
     </CardFooter>
