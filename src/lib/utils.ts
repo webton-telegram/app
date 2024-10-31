@@ -8,4 +8,5 @@ export const formatCompactNumber = new Intl.NumberFormat('en-US', {
   compactDisplay: 'short',
 });
 
-export default null;
+export const shortenAddress = (address: string): string =>
+  `${address.slice(0, 4)}...${address.slice(46)}`;

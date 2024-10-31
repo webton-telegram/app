@@ -1,4 +1,4 @@
-import { cn } from './utils';
+import { cn, shortenAddress } from './utils';
 
 describe('utility', () => {
   describe('cn()', () => {
@@ -38,6 +38,15 @@ describe('utility', () => {
     it('returns an empty string if no valid class names are provided', () => {
       const result = cn(undefined, null, false, '');
       expect(result).toBe('');
+    });
+  });
+
+  describe('shortenAddress', () => {
+    it('returns shorten address', () => {
+      const result = shortenAddress(
+        'UQDdpiiSPtwMxsmDahrVZqqYJN2urIUmsRAfWwaAlmKQE7ys',
+      );
+      expect(result).toBe('UQDd...ys');
     });
   });
 });

@@ -1,20 +1,26 @@
-import { useState } from 'react';
-import { Button, Listbox, ListboxItem } from '@nextui-org/react';
+import {
+  Avatar,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Listbox,
+  ListboxItem,
+  Skeleton,
+} from '@nextui-org/react';
 import { FaChevronRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { format } from 'date-fns/format';
-import WebApp from '@twa-dev/sdk';
 
 import useTelegramAuth from 'hooks/useTelegramAuth';
 
 import LayoutContainer from 'components/layout/LayoutContainer';
-import ThemeControlSwitch from 'components/ThemeControlSwitch';
 import {
   useIsConnectionRestored,
   useTonAddress,
   useTonConnectUI,
 } from '@tonconnect/ui-react';
 import useTonAddressInfo from 'hooks/useTonAddressInfo';
+import { shortenAddress } from 'lib/utils';
 
 type Key = string | number;
 
@@ -38,18 +44,13 @@ const list: ListItem[] = [
 ];
 
 const Profile = () => {
-  const [count, setCount] = useState(0);
   const { isTelegramView, telegramAuthData } = useTelegramAuth();
   const [tonConnectUI] = useTonConnectUI();
   const userFriendlyAddress = useTonAddress();
-  const rawAddress = useTonAddress(false);
+
   const connectionRestored = useIsConnectionRestored();
 
   const { addressInfo } = useTonAddressInfo();
-
-  const handleDisconnect = async () => {
-    await tonConnectUI.disconnect();
-  };
 
   const handleConnect = async () => {
     await tonConnectUI.openModal();
@@ -64,67 +65,84 @@ const Profile = () => {
     navigate(find.link);
   };
 
-  if (!connectionRestored) {
-    return <>Please wait...</>;
-  }
-
   return (
     <LayoutContainer>
-      <div className="py-4">
-        <div className="card">
-          <button onClick={() => setCount((prevState) => prevState + 1)}>
-            count is {count}
-          </button>
-        </div>
-        <div className="card">
-          <button
-            onClick={() =>
-              WebApp.showAlert(`Hello World! Current count is ${count}`)
-            }
-          >
-            Show Alert
-          </button>
-        </div>
-        <ThemeControlSwitch />
+      <div className="flex flex-col gap-4 py-4">
         {isTelegramView && telegramAuthData.user && (
-          <div className="flex flex-col gap-1 px-3 mb-4 text-xs overflow-hidden break-all">
-            <div className="grid grid-cols-2">
-              <p>id: {telegramAuthData.user.id}</p>
-              <p>firstName: {telegramAuthData.user.firstName}</p>
-              <p>lastName: {telegramAuthData.user.lastName}</p>
-              <p>username: {telegramAuthData.user.username}</p>
-              <p>languageCode: {telegramAuthData.user.languageCode}</p>
-              <p>isPremium: {telegramAuthData.user.isPremium?.toString()}</p>
-              <p>
-                allowsWriteToPm:{' '}
-                {telegramAuthData.user.allowsWriteToPm?.toString()}
-              </p>
-            </div>
-            {telegramAuthData.authDate && (
-              <p>authDate: {format(telegramAuthData.authDate, 'dd/MM/yyyy')}</p>
-            )}
-            <p>startParam: {telegramAuthData.startParam}</p>
-            <p>chatType: {telegramAuthData.chatType}</p>
-            <p>chatInstance: {telegramAuthData.chatInstance}</p>
-            <p>hash: {telegramAuthData.hash}</p>
-          </div>
+          <Card shadow="sm">
+            <CardHeader className="flex items-center gap-3">
+              <div>
+                <Avatar
+                  name={telegramAuthData.user.firstName[0].toUpperCase()}
+                />
+              </div>
+              <div className="flex flex-col">
+                <p className="text-small text-default-500">
+                  @{telegramAuthData.user.username}
+                </p>
+                <p>{0} Point</p>
+              </div>
+            </CardHeader>
+            <CardBody>
+              {!connectionRestored && (
+                <Skeleton className="w-full h-10 rounded-xl" />
+              )}
+
+              {connectionRestored && tonConnectUI.connected && (
+                <Button color="success">Get Reward</Button>
+              )}
+
+              {connectionRestored && !tonConnectUI.connected && (
+                <Button onClick={handleConnect}>Connect wallet</Button>
+              )}
+            </CardBody>
+          </Card>
         )}
 
-        <div>
-          {tonConnectUI.connected ? (
-            <Button onClick={handleDisconnect}>Disconnect</Button>
-          ) : (
-            <Button onClick={handleConnect}>Connect wallet</Button>
-          )}
+        {tonConnectUI.connected && (
+          <Card shadow="sm">
+            <CardHeader>
+              <div className="flex flex-col gap-4 w-full">
+                <div className="flex justify-between items-center w-full">
+                  <p className="text-lg">Wallet</p>
+                  <p className="text-sm text-default-700">
+                    {shortenAddress(userFriendlyAddress)}
+                  </p>
+                </div>
 
-          <div>
-            {userFriendlyAddress && (
-              <p>User-friendly address: {userFriendlyAddress}</p>
-            )}
-            {rawAddress && <p>Raw address: {rawAddress}</p>}
-            {addressInfo && <p>Balance: {addressInfo.balance} TON</p>}
-          </div>
-        </div>
+                <div className="flex flex-col gap-2">
+                  {addressInfo && (
+                    <div className="flex items-center gap-3">
+                      <Avatar src="https://ton.org/download/ton_symbol.svg" />
+                      <div className="flex flex-col gap-0.5">
+                        <p className="text-xl font-semibold">
+                          <span className="font-mono">
+                            {addressInfo.balance}
+                          </span>{' '}
+                          <span className=" text-lg">TON</span>
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {addressInfo && (
+                    <div className="flex items-center gap-3">
+                      <Avatar src="https://ton.org/download/ton_symbol.svg" />
+                      <div className="flex flex-col gap-0.5">
+                        <p className="text-xl font-semibold">
+                          <span className="font-mono">
+                            {addressInfo.balance}
+                          </span>{' '}
+                          <span className=" text-lg">WEBTON</span>
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+        )}
 
         <Listbox aria-label="Actions" onAction={handleAction}>
           {list.map((item) => (

@@ -15,6 +15,7 @@ declare global {
             username: string;
             languageCode?: string;
             isPremium: boolean;
+            photoUrl?: string;
             allowsWriteToPm: boolean;
           };
           authDate: Date | null;
@@ -35,6 +36,7 @@ type TelegramAuthData = {
     firstName: string;
     lastName: string;
     username: string;
+    photoUrl?: string;
     languageCode?: string;
     isPremium: boolean;
     allowsWriteToPm: boolean;
