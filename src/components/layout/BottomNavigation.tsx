@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@nextui-org/react';
 
 import { cn } from 'lib/utils';
+import WebApp from '@twa-dev/sdk';
 
 const BottomNavigation = () => {
   const navigate = useNavigate();
@@ -11,13 +12,16 @@ const BottomNavigation = () => {
     navigate(target);
   };
 
+  const isFloating = /ios/i.test(WebApp.platform);
+
   return (
     <div
       className={cn(
         'fixed bottom-0 left-0 right-0 overflow-x-auto',
-        'flex justify-around items-center gap-2 w-full max-w-[500px] h-20 mx-auto pb-3',
+        'flex justify-around items-center gap-2 w-full max-w-[500px] h-20 mx-auto',
         'text-neutral-950 bg-white',
         'dark:text-neutral-100 dark:bg-neutral-900',
+        isFloating && 'pb-3',
       )}
     >
       <Button
