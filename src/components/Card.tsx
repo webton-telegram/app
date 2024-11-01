@@ -49,10 +49,8 @@ const CustomCard = ({
             <p className="text-xs text-gray-400">{viewCount}</p>
           </div>
           <div className="flex items-center gap-1">
-            <FaThumbsUp className="text-gray-400" />
-            <div className="pt-[2px]">
-              <p className="text-xs text-gray-400">{likeCount}</p>
-            </div>
+            <FaThumbsUp className="text-gray-400" size={14} />
+            <p className="text-xs text-gray-400">{likeCount}</p>
           </div>
         </div>
       </CardFooter>

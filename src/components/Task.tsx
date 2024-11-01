@@ -73,7 +73,7 @@ const TaskContainer = ({
     )}
   >
     <div className="flex flex-col w-full gap-1">
-      <p className="font-medium">{title}</p>
+      <p className="text-sm font-medium">{title}</p>
       <p className="text-sm font-medium text-gray-500">+ {point} Point</p>
       {progress && progress}
     </div>

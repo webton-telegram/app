@@ -20,7 +20,7 @@ const banners = [
 const Root = () => (
   <LayoutContainer isSpacing={false}>
     <div className="flex flex-col gap-4 pb-4">
-      <div className="w-full h-[200px]">
+      <div className="w-full h-48">
         <Swiper
           spaceBetween={0}
           slidesPerView={1}
