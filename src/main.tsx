@@ -11,6 +11,7 @@ import Mission from 'routes/mission';
 import Profile from 'routes/profile';
 import Recently from 'routes/recently';
 import Recommended from 'routes/recommended';
+import Episode from 'routes/episode';
 
 import './index.css';
 
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
   {
     path: '/profile/recommended',
     element: <Recommended />,
+  },
+  {
+    path: '/episode/:id',
+    element: <Episode />,
   },
 ]);
 

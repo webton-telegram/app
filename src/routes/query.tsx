@@ -2,6 +2,8 @@ import { useState, ChangeEvent, useMemo } from 'react';
 import { Input } from '@nextui-org/react';
 import { IoMdClose } from 'react-icons/io';
 import { useDebounce } from 'react-use';
+import { useNavigate } from 'react-router-dom';
+import { FaChevronRight } from 'react-icons/fa';
 
 import Card from 'components/Card';
 import LayoutContainer from 'components/layout/LayoutContainer';
@@ -12,12 +14,22 @@ const Query = () => {
   const [input, setInput] = useState('');
   const [debouncedInput, setDebouncedInput] = useState(input);
 
+  const navigate = useNavigate();
+
   useDebounce(
     () => {
       setDebouncedInput(input.trim());
     },
     300,
     [input],
+  );
+
+  const filteredCards = useMemo(
+    () =>
+      cards.filter((card) =>
+        card.title.toLowerCase().includes(debouncedInput.toLowerCase()),
+      ),
+    [debouncedInput],
   );
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -28,13 +40,9 @@ const Query = () => {
     setInput('');
   };
 
-  const filteredCards = useMemo(
-    () =>
-      cards.filter((card) =>
-        card.title.toLowerCase().includes(debouncedInput.toLowerCase()),
-      ),
-    [debouncedInput],
-  );
+  const handleNavigate = () => {
+    navigate('/profile/recommended');
+  };
 
   return (
     <LayoutContainer>
@@ -49,11 +57,20 @@ const Query = () => {
       </div>
 
       {!debouncedInput && (
-        <div className="flex flex-col gap-1">
-          <p className="text-xl">Recommended</p>
+        <div className="flex flex-col gap-3">
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg">Recommend</h2>
+            <button
+              className="flex justify-center items-center gap-1 text-default-500 text-sm"
+              onClick={handleNavigate}
+            >
+              More <FaChevronRight size={12} />
+            </button>
+          </div>
+
           <div className="relative z-0 grid grid-cols-3 gap-2 pb-4">
-            {cards.map((card) => (
-              <Card key={`card-${card.title}`} {...card} />
+            {cards.slice(0, 6).map((card) => (
+              <Card key={`recommend-${card.title}`} {...card} />
             ))}
           </div>
         </div>
