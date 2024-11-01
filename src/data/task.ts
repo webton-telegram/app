@@ -1,6 +1,14 @@
-import { type Props as TaskItem } from 'components/Task';
+import type { TaskItem, TaskProgressProps } from 'types/task';
 
-const tasks: TaskItem[] = [
+type Task = TaskItem & TaskProgressProps;
+
+export const dailyTask: TaskItem = {
+  title: 'Day 1',
+  point: 100,
+  status: 'ongoing',
+};
+
+export const weeklyTasks: Task[] = [
   {
     title: 'Share Webtoon 5 Times or More',
     point: 100,
@@ -37,5 +45,3 @@ const tasks: TaskItem[] = [
     status: 'completed',
   },
 ];
-
-export default tasks;
