@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import WebApp from '@twa-dev/sdk';
-import { init } from '@telegram-apps/sdk';
 
 import AppProvider from 'components/AppProvider';
 import Root from 'routes/root';
@@ -16,10 +15,6 @@ import Recommended from 'routes/recommended';
 import './index.css';
 
 WebApp.ready();
-
-if (window.Telegram.WebApp.initData) {
-  init();
-}
 
 const router = createBrowserRouter([
   {
