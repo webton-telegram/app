@@ -74,51 +74,53 @@ const Profile = () => {
         )}
 
         {tonConnectUI.connected && (
-          <Card shadow="sm">
-            <CardHeader>
-              <div className="flex flex-col gap-4 w-full">
-                <div className="flex justify-between items-center w-full">
-                  <p className="text-lg">Wallet</p>
-                  <p className="text-sm text-default-700">
-                    {shortenAddress(userFriendlyAddress)}
-                  </p>
-                </div>
+          <>
+            <Card shadow="sm">
+              <CardHeader>
+                <div className="flex flex-col gap-4 w-full">
+                  <div className="flex justify-between items-center w-full">
+                    <p className="text-lg">Wallet</p>
+                    <p className="text-sm text-default-700">
+                      {shortenAddress(userFriendlyAddress)}
+                    </p>
+                  </div>
 
-                <div className="flex flex-col gap-2">
-                  {addressInfo && (
-                    <div className="flex items-center gap-3">
-                      <Avatar src="https://ton.org/download/ton_symbol.svg" />
-                      <div className="flex flex-col gap-0.5">
-                        <p className="text-xl font-semibold">
-                          <span className="font-mono">
-                            {addressInfo.balance}
-                          </span>{' '}
-                          <span className=" text-lg">TON</span>
-                        </p>
+                  <div className="flex flex-col gap-2">
+                    {addressInfo && (
+                      <div className="flex items-center gap-3">
+                        <Avatar src="https://ton.org/download/ton_symbol.svg" />
+                        <div className="flex flex-col gap-0.5">
+                          <p className="text-xl font-semibold">
+                            <span className="font-mono">
+                              {addressInfo.balance}
+                            </span>{' '}
+                            <span className=" text-lg">TON</span>
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  {addressInfo && (
-                    <div className="flex items-center gap-3">
-                      <Avatar src="https://ton.org/download/ton_symbol.svg" />
-                      <div className="flex flex-col gap-0.5">
-                        <p className="text-xl font-semibold">
-                          <span className="font-mono">
-                            {addressInfo.balance}
-                          </span>{' '}
-                          <span className=" text-lg">WEBTON</span>
-                        </p>
+                    {addressInfo && (
+                      <div className="flex items-center gap-3">
+                        <Avatar src="https://ton.org/download/ton_symbol.svg" />
+                        <div className="flex flex-col gap-0.5">
+                          <p className="text-xl font-semibold">
+                            <span className="font-mono">
+                              {addressInfo.balance}
+                            </span>{' '}
+                            <span className=" text-lg">WEBTON</span>
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              </div>
-            </CardHeader>
-          </Card>
+              </CardHeader>
+            </Card>
+
+            <Divider />
+          </>
         )}
-
-        <Divider />
 
         <div className="flex flex-col gap-3">
           <div className="flex justify-between items-center">

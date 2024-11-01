@@ -133,7 +133,7 @@ const Reward = () => {
   return (
     <LayoutContainer>
       <div className="py-4 space-y-6">
-        <Card className="p-4 text-center">
+        <Card className="p-4 text-center bg-content1">
           <div className="flex flex-col gap-1">
             <p className="text-xl">
               Enjoy a variety of{' '}
@@ -229,14 +229,14 @@ const Reward = () => {
             </TableBody>
           </Table>
           <div className="flex items-center justify-end">
-            <Button variant="ghost">
+            <Button className="bg-transparent" size="sm">
               Learn more{' '}
               <IoIosArrowBack size={16} className="rotate-180 text-2xl" />
             </Button>
           </div>
         </div>
 
-        <Card className="p-4 space-y-2">
+        <Card className="p-4 space-y-2 bg-content1">
           <p className="text-lg font-bold">About Reward</p>
           <p className="text-sm">1. Enjoy WebToon works.</p>
           <p className="text-sm">

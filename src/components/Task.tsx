@@ -68,7 +68,7 @@ const TaskContainer = ({
 }: TaskContainerProps) => (
   <div
     className={cn(
-      'flex justify-between items-center p-3 rounded-lg shadow-sm bg-gray-100 dark:bg-gray-900',
+      'flex justify-between items-center p-3 rounded-lg shadow-sm bg-content2',
       status === 'completed' && 'opacity-50',
     )}
   >
