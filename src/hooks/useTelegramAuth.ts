@@ -1,34 +1,6 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-
 import { useState, useEffect } from 'react';
 import { parseInitData } from '@telegram-apps/sdk';
-
-declare global {
-  interface Window {
-    Telegram: {
-      WebApp: {
-        initData?: {
-          user?: {
-            id: number;
-            firstName: string;
-            lastName: string;
-            username: string;
-            languageCode?: string;
-            isPremium: boolean;
-            photoUrl?: string;
-            allowsWriteToPm: boolean;
-          };
-          authDate: Date | null;
-          hash: string;
-          startParam: string;
-          chatType: string;
-          chatInstance: string;
-        };
-        ready: () => void;
-      };
-    };
-  }
-}
+import WebApp from '@twa-dev/sdk';
 
 type TelegramAuthData = {
   user?: {
@@ -68,7 +40,7 @@ const useTelegramAuth = () => {
   });
 
   useEffect(() => {
-    const { initData } = window.Telegram.WebApp;
+    const { initData } = WebApp;
     setIsTelegramView(!!initData);
     if (!initData) return;
 
