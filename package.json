@@ -19,6 +19,7 @@
     "@ton/ton": "^15.1.0",
     "@tonconnect/ui-react": "^2.0.9",
     "@twa-dev/sdk": "^7.10.1",
+    "axios": "^1.7.7",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^11.11.9",
