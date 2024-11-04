@@ -8,12 +8,13 @@ import {
   SharedSelection,
 } from '@nextui-org/react';
 
+import cards from 'data/card';
+import selectedList from 'data/selectedBox';
+import useActivateBackButton from 'hooks/useActivateBackButton';
+
 import Card from 'components/Card';
 import LayoutContainer from 'components/layout/LayoutContainer';
 import PageTitle from 'components/PageTitle';
-
-import cards from 'data/card';
-import selectedList from 'data/selectedBox';
 
 const Recently = () => {
   const [selectedKeys, setSelectedKeys] = useState(
@@ -28,6 +29,8 @@ const Recently = () => {
       )?.text,
     [selectedKeys],
   );
+
+  useActivateBackButton('/profile');
 
   const handleSelectionChange = (key: SharedSelection) => {
     if (!key.currentKey) return;

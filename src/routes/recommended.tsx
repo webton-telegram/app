@@ -8,17 +8,20 @@ import {
   SharedSelection,
 } from '@nextui-org/react';
 
+import cards from 'data/card';
+import selectedList from 'data/selectedBox';
+import useActivateBackButton from 'hooks/useActivateBackButton';
+
 import Card from 'components/Card';
 import LayoutContainer from 'components/layout/LayoutContainer';
 import PageTitle from 'components/PageTitle';
-
-import cards from 'data/card';
-import selectedList from 'data/selectedBox';
 
 const Recommended = () => {
   const [selectedKeys, setSelectedKeys] = useState(
     new Set([selectedList[0].key]),
   );
+
+  useActivateBackButton('/profile');
 
   const selectedText = useMemo(
     () =>
