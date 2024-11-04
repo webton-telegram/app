@@ -15,6 +15,10 @@ const Episode = () => {
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const handleClick = (detailId: number) => () => {
+    navigate(`/detail/${detailId}`);
+  };
+
   useEffect(() => {
     if (!id) navigate('/');
   }, [id, navigate]);
@@ -92,38 +96,41 @@ const Episode = () => {
           </div>
           <div className="mt-2 space-y-2">
             {episodeList.map((episode) => (
-              <Card
+              <button
                 key={episode.episode}
-                className="flex-row items-center p-2 gap-2 bg-content1"
+                className="p-0 text-left"
+                onClick={handleClick(episode.id)}
               >
-                <div className="bg-gray-500 w-16">
-                  <Image
-                    shadow="sm"
-                    width="100%"
-                    alt="banner"
-                    className="w-full object-cover rounded-none"
-                    src={episode.img}
-                  />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-400">
-                    Episode {episode.episode}
-                  </p>
-                  <p className="text-md font-medium">{episode.title}</p>
+                <Card className="flex-row items-center p-2 gap-2 bg-content1">
+                  <div className="bg-gray-500 w-16">
+                    <Image
+                      shadow="sm"
+                      width="100%"
+                      alt="banner"
+                      className="w-full object-cover rounded-none"
+                      src={episode.img}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-400">
+                      Episode {episode.episode}
+                    </p>
+                    <p className="text-md font-medium">{episode.title}</p>
 
-                  <div className="flex items-center gap-4 mt-1 text-gray-400">
-                    <p className="text-xs text-gray-400">{episode.date}</p>
-                    <div className="flex items-center gap-1">
-                      <GrView className="text-gray-400" />
-                      <span className="text-xs">{episode.viewCount}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <FaThumbsUp className="text-gray-400" size={14} />
-                      <p className="text-xs">{episode.likeCount}</p>
+                    <div className="flex items-center gap-4 mt-1 text-gray-400">
+                      <p className="text-xs text-gray-400">{episode.date}</p>
+                      <div className="flex items-center gap-1">
+                        <GrView className="text-gray-400" />
+                        <span className="text-xs">{episode.viewCount}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <FaThumbsUp className="text-gray-400" size={14} />
+                        <p className="text-xs">{episode.likeCount}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Card>
+                </Card>
+              </button>
             ))}
           </div>
         </div>

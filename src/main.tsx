@@ -12,6 +12,7 @@ import Profile from 'routes/profile';
 import Recently from 'routes/recently';
 import Recommended from 'routes/recommended';
 import Episode from 'routes/episode';
+import Detail from 'routes/detail';
 
 import './index.css';
 
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
   {
     path: '/episode/:id',
     element: <Episode />,
+  },
+  {
+    path: '/detail/:id',
+    element: <Detail />,
   },
 ]);
 
