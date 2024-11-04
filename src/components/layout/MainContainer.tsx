@@ -18,7 +18,7 @@ const MainContainer = ({ children, isSpacing = true }: Props) => (
       <div
         id="main-container"
         className={cn(
-          'overflow-y-auto max-h-[calc(100vh-5rem)] w-full',
+          'overflow-y-auto max-h-[calc(100vh-5rem)] w-full scrollbar-hide',
           'bg-white dark:bg-neutral-900',
           'text-neutral-950 dark:text-neutral-100',
           isSpacing && 'px-4',

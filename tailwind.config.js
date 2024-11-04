@@ -14,5 +14,9 @@ export default {
     },
   },
   darkMode: 'class',
-  plugins: [require('@tailwindcss/typography'), nextui()],
+  plugins: [
+    require('@tailwindcss/typography'),
+    require('tailwind-scrollbar-hide'),
+    nextui(),
+  ],
 };
