@@ -39,6 +39,10 @@ const Detail = () => {
     [lastScrollY],
   );
 
+  const handleWriterClick = (writerId: number) => () => {
+    navigate(`/writer/${writerId}`);
+  };
+
   useEffect(() => {
     const options = {
       root: null,
@@ -78,8 +82,14 @@ const Detail = () => {
       <div className="space-y-2 p-4">
         <h2 className="text-lg font-semibold">1 - Chopped Onions</h2>
         <div className="flex gap-2">
-          <p className="text-sm text-gray-600">leehama</p>
-          <p className="text-sm text-gray-600">2024-08-30 00:00</p>
+          <Button
+            className="min-w-0 h-auto p-0"
+            variant="light"
+            onClick={handleWriterClick(1)}
+          >
+            <p className="text-sm text-gray-400 font-bold">leehama</p>
+          </Button>
+          <p className="text-sm text-gray-400">2024-08-30 00:00</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 text-gray-400">

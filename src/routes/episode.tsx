@@ -19,6 +19,10 @@ const Episode = () => {
     navigate(`/detail/${detailId}`);
   };
 
+  const handleWriterClick = (writerId: number) => () => {
+    navigate(`/writer/${writerId}`);
+  };
+
   useEffect(() => {
     if (!id) navigate('/');
   }, [id, navigate]);
@@ -41,7 +45,13 @@ const Episode = () => {
         <div className="px-4 space-y-4 text-center">
           <div>
             <h2 className="text-lg font-semibold">Gourmet Hound</h2>
-            <p className="text-sm text-gray-400">leehama</p>
+            <Button
+              className="min-w-0 h-auto p-0"
+              variant="light"
+              onClick={handleWriterClick(1)}
+            >
+              <p className="text-sm text-gray-400 font-bold">leehama</p>
+            </Button>
           </div>
           <div
             className={cn(
@@ -51,7 +61,7 @@ const Episode = () => {
           >
             <p
               className={cn(
-                'text-sm text-gray-600',
+                'text-sm text-gray-500',
                 isExpanded ? '' : 'line-clamp-1',
               )}
             >
@@ -98,7 +108,7 @@ const Episode = () => {
             {episodeList.map((episode) => (
               <button
                 key={episode.episode}
-                className="p-0 text-left"
+                className="w-full p-0 text-left"
                 onClick={handleClick(episode.id)}
               >
                 <Card className="flex-row items-center p-2 gap-2 bg-content1">

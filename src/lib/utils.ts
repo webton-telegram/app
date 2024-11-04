@@ -10,3 +10,6 @@ export const formatCompactNumber = new Intl.NumberFormat('en-US', {
 
 export const shortenAddress = (address: string): string =>
   `${address.slice(0, 4)}...${address.slice(46)}`;
+
+export const setComma = (num: number): string =>
+  num.toLocaleString(undefined, { maximumFractionDigits: 4 });

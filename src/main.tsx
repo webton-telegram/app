@@ -13,6 +13,7 @@ import Recently from 'routes/recently';
 import Recommended from 'routes/recommended';
 import Episode from 'routes/episode';
 import Detail from 'routes/detail';
+import Writer from 'routes/writer';
 
 import './index.css';
 
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
   {
     path: '/detail/:id',
     element: <Detail />,
+  },
+  {
+    path: '/writer/:id',
+    element: <Writer />,
   },
 ]);
 
