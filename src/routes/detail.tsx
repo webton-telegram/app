@@ -1,7 +1,12 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { GrView } from 'react-icons/gr';
-import { FaThumbsUp, FaShareAlt } from 'react-icons/fa';
+import {
+  FaThumbsUp,
+  FaShareAlt,
+  FaArrowRight,
+  FaArrowLeft,
+} from 'react-icons/fa';
 import { AiOutlineLike } from 'react-icons/ai';
 import { Button, Image } from '@nextui-org/react';
 
@@ -11,11 +16,13 @@ import { formatCompactNumber } from 'lib/utils';
 import detailImages from 'data/detail';
 
 const Detail = () => {
-  const [showButtons, setShowButtons] = useState(true);
+  const [isScrollEnded, setIsScrollEnded] = useState(false);
+  const [showEpisodeScrollUp, setShowEpisodeScrollUp] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   const { id } = useParams();
   const navigate = useNavigate();
+  const observerRef = useRef<HTMLDivElement>(null);
 
   const controlButtons = useCallback(
     (event: Event) => {
@@ -23,14 +30,32 @@ const Detail = () => {
       const currentScrollY = target.scrollTop;
 
       if (currentScrollY > lastScrollY) {
-        setShowButtons(false);
+        setShowEpisodeScrollUp(false);
       } else {
-        setShowButtons(true);
+        setShowEpisodeScrollUp(true);
       }
       setLastScrollY(currentScrollY);
     },
     [lastScrollY],
   );
+
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        setIsScrollEnded(!!entry.isIntersecting);
+      });
+    }, options);
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+  }, []);
 
   useEffect(() => {
     const mainContainer = document.getElementById('main-container');
@@ -82,9 +107,11 @@ const Detail = () => {
           />
         ))}
       </div>
+      <div ref={observerRef} className="h-1 mb-10" />
+
       <div
-        className={`fixed z-10 bottom-[88px] left-3 flex items-center justify-between w-[calc(100%-24px)] gap-1 transition-opacity duration-300 ${
-          showButtons ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        className={`fixed z-10 bottom-[168px] left-3 flex items-center justify-between w-[calc(100%-24px)] gap-2 transition-opacity duration-300 ${
+          isScrollEnded ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       >
         <Button className="flex-1" color="primary" variant="faded">
@@ -95,6 +122,23 @@ const Detail = () => {
           <FaShareAlt />
           Share
         </Button>
+      </div>
+      <div
+        className={`fixed z-10 bottom-20 flex items-center justify-between w-full transition-opacity duration-300 ${
+          isScrollEnded || showEpisodeScrollUp
+            ? 'opacity-100'
+            : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <div className="flex items-center justify-between w-full p-4 bg-neutral-800">
+          <Button className="min-w-0">
+            <FaArrowLeft />
+          </Button>
+          <Button>Episode List</Button>
+          <Button className="min-w-0">
+            <FaArrowRight />
+          </Button>
+        </div>
       </div>
     </LayoutContainer>
   );
