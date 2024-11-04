@@ -16,8 +16,9 @@ const MainContainer = ({ children, isSpacing = true }: Props) => (
     />
     <div className="relative flex flex-col w-full max-w-[500px] h-screen max-h-screen mx-auto lg:mx-0">
       <div
+        id="main-container"
         className={cn(
-          'overflow-y-auto max-h-[calc(100vh-5rem)]',
+          'overflow-y-auto max-h-[calc(100vh-5rem)] w-full',
           'bg-white dark:bg-neutral-900',
           'text-neutral-950 dark:text-neutral-100',
           isSpacing && 'px-4',
