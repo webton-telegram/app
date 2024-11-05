@@ -14,6 +14,18 @@ const api = axios.create({
   },
 });
 
+api.interceptors.request.use((config) => {
+  const nextConfig = config;
+
+  const accessToken = localStorage.getItem('webton_access-token');
+
+  if (accessToken) {
+    nextConfig.headers.Authorization = `Bearer ${accessToken}`;
+  }
+
+  return nextConfig;
+});
+
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ResponseErrorData>) => {
