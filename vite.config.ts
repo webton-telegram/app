@@ -14,11 +14,12 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/api': {
-          target: env.API_SERVER_HOST,
+          target: env.VITE_API_SERVER_HOST,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
+      cors: { origin: true },
     },
     test: {
       globals: true,

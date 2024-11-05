@@ -4,7 +4,9 @@ import ResponseError from 'service/api/error';
 
 import type { ResponseErrorData } from 'types/fetch';
 
-const baseURL = '/api';
+const baseURL = import.meta.env.DEV
+  ? '/api'
+  : import.meta.env.VITE_API_SERVER_HOST;
 
 const api = axios.create({
   baseURL,
