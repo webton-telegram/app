@@ -5,6 +5,8 @@ import WebApp from '@twa-dev/sdk';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+import AuthProvider from 'context/AuthContext';
+
 type Props = {
   children: ReactNode;
 };
@@ -17,15 +19,19 @@ const AppProvider = ({ children }: Props) => {
   }, []);
 
   return (
-    <TonConnectUIProvider
-      manifestUrl={`${import.meta.env.VITE_HOST}/tonconnect-manifest.json`}
-    >
-      <QueryClientProvider client={queryClient}>
-        <NextUIProvider>
-          <NextThemesProvider attribute="class">{children}</NextThemesProvider>
-        </NextUIProvider>
-      </QueryClientProvider>
-    </TonConnectUIProvider>
+    <AuthProvider>
+      <TonConnectUIProvider
+        manifestUrl={`${import.meta.env.VITE_HOST}/tonconnect-manifest.json`}
+      >
+        <QueryClientProvider client={queryClient}>
+          <NextUIProvider>
+            <NextThemesProvider attribute="class">
+              {children}
+            </NextThemesProvider>
+          </NextUIProvider>
+        </QueryClientProvider>
+      </TonConnectUIProvider>
+    </AuthProvider>
   );
 };
 
