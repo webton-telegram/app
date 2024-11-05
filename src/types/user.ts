@@ -4,6 +4,7 @@ export type UserInfo = {
   firstName: string;
   lastName: string;
   userName: string;
-  photoUrl: string;
+  languageCode: string;
+  walletAddress: string;
   createdAt: string;
 };

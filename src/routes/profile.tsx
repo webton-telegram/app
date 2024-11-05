@@ -15,8 +15,8 @@ import {
   useTonConnectUI,
 } from '@tonconnect/ui-react';
 
+import { useSession } from 'context/AuthContext';
 import cards from 'data/card';
-import useTelegramAuth from 'hooks/useTelegramAuth';
 import useTonAddressInfo from 'hooks/useTonAddressInfo';
 import { shortenAddress } from 'lib/utils';
 
@@ -24,12 +24,13 @@ import LayoutContainer from 'components/layout/LayoutContainer';
 import ComicsItem from 'components/Card';
 
 const Profile = () => {
-  const { isTelegramView, telegramAuthData } = useTelegramAuth();
   const [tonConnectUI] = useTonConnectUI();
   const userFriendlyAddress = useTonAddress();
   const connectionRestored = useIsConnectionRestored();
   const { addressInfo } = useTonAddressInfo();
   const navigate = useNavigate();
+
+  const { status, session } = useSession();
 
   const handleConnect = async () => {
     await tonConnectUI.openModal();
@@ -42,17 +43,31 @@ const Profile = () => {
   return (
     <LayoutContainer>
       <div className="flex flex-col gap-4 py-4">
-        {isTelegramView && telegramAuthData.user && (
+        {status === 'loading' && (
           <Card shadow="sm">
             <CardHeader className="flex items-center gap-3">
               <div>
-                <Avatar
-                  name={telegramAuthData.user.firstName[0].toUpperCase()}
-                />
+                <Skeleton className="flex rounded-full w-10 h-10" />
+              </div>
+              <div className="flex flex-col gap-2">
+                <Skeleton className="h-3 w-36 rounded-sm" />
+                <Skeleton className="h-3 w-24 rounded-sm" />
+              </div>
+            </CardHeader>
+            <CardBody>
+              <Skeleton className="h-10 w-full rounded-medium" />
+            </CardBody>
+          </Card>
+        )}
+        {status === 'authenticated' && session && (
+          <Card shadow="sm">
+            <CardHeader className="flex items-center gap-3">
+              <div>
+                <Avatar name={session.user.firstName[0].toUpperCase()} />
               </div>
               <div className="flex flex-col">
                 <p className="text-small text-default-500">
-                  @{telegramAuthData.user.username}
+                  @{session.user.userName}
                 </p>
                 <p>{0} Point</p>
               </div>
