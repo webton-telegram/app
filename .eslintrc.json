@@ -86,7 +86,6 @@
     "react-refresh/only-export-components": [
       "warn",
       {
-        "allowExportNames": ["useSession"],
         "allowConstantExport": true
       }
     ],

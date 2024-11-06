@@ -5,7 +5,7 @@ import WebApp from '@twa-dev/sdk';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import AuthProvider from 'context/AuthContext';
+import AuthProvider from 'components/AuthProvider';
 
 type Props = {
   children: ReactNode;

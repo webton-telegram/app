@@ -10,3 +10,8 @@ export type ResultAuthData = {
   refreshToken: string;
   user: UserInfo;
 };
+
+export type AuthState = {
+  status: 'loading' | 'authenticated';
+  session?: ResultAuthData;
+};

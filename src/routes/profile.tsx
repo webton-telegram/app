@@ -15,8 +15,8 @@ import {
   useTonConnectUI,
 } from '@tonconnect/ui-react';
 
-import { useSession } from 'context/AuthContext';
 import cards from 'data/card';
+import useSession from 'hooks/useSession';
 import useTonAddressInfo from 'hooks/useTonAddressInfo';
 import { shortenAddress } from 'lib/utils';
 
