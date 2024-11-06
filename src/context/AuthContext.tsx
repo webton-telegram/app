@@ -29,6 +29,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       const res = await auth({
         telegramInitData: initData,
+        // set VITE_TG_BOT_TOKEN to .env.local
+        botToken: import.meta.env.VITE_TG_BOT_TOKEN,
       });
 
       if (!ignore) {
