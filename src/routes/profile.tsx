@@ -1,9 +1,11 @@
+import { useEffect, useState } from 'react';
 import {
   Avatar,
   Button,
   Card,
   CardBody,
   CardHeader,
+  Chip,
   Divider,
   Skeleton,
 } from '@nextui-org/react';
@@ -13,12 +15,18 @@ import {
   useIsConnectionRestored,
   useTonAddress,
   useTonConnectUI,
+  useTonWallet,
 } from '@tonconnect/ui-react';
+import { toast } from 'react-toastify';
 
 import cards from 'data/card';
 import useSession from 'hooks/useSession';
+import usePrepareTonConnect from 'hooks/usePrepareTonConnect';
 import useTonAddressInfo from 'hooks/useTonAddressInfo';
 import { shortenAddress } from 'lib/utils';
+import { syncWallet } from 'service/api/wallet';
+
+import type { TonProof } from 'types/wallet';
 
 import LayoutContainer from 'components/layout/LayoutContainer';
 import ComicsItem from 'components/Card';
@@ -29,16 +37,106 @@ const Profile = () => {
   const connectionRestored = useIsConnectionRestored();
   const { addressInfo } = useTonAddressInfo();
   const navigate = useNavigate();
+  const wallet = useTonWallet();
 
   const { status, session } = useSession();
 
+  const [isConnecting, setIsConnecting] = useState(false);
+
+  const isPrepared = usePrepareTonConnect();
+
   const handleConnect = async () => {
+    if (!isPrepared) {
+      return;
+    }
+
+    setIsConnecting(true);
+
     await tonConnectUI.openModal();
   };
 
   const handleNavigate = (target: string) => () => {
     navigate(target);
   };
+
+  useEffect(() => {
+    if (!connectionRestored) {
+      return;
+    }
+
+    if (isPrepared && tonConnectUI.connected && wallet && isConnecting) {
+      const updateFailedToConnect = async () => {
+        setIsConnecting(false);
+
+        await tonConnectUI.disconnect();
+      };
+
+      (async () => {
+        try {
+          const {
+            address,
+            publicKey,
+            walletStateInit: stateInit,
+          } = wallet.account;
+
+          if (
+            !wallet.connectItems ||
+            !wallet.connectItems.tonProof ||
+            !publicKey
+          ) {
+            toast.error(
+              <div>
+                <p>Failed to connect.</p>
+                <p>Please retry!</p>
+              </div>,
+            );
+            await updateFailedToConnect();
+
+            return;
+          }
+
+          if ('proof' in wallet.connectItems.tonProof) {
+            const result = await syncWallet({
+              address,
+              publicKey,
+              proof: {
+                ...(wallet.connectItems.tonProof.proof as unknown as TonProof),
+                stateInit,
+              },
+            });
+
+            if (!result) {
+              toast.error(
+                <div>
+                  <p>Failed to connect.</p>
+                  <p>Please retry!</p>
+                </div>,
+              );
+              await updateFailedToConnect();
+            }
+
+            setIsConnecting(false);
+          }
+        } catch (error) {
+          toast.error(
+            <div>
+              <p>Failed to connect.</p>
+              <p>Please retry!</p>
+            </div>,
+          );
+          await updateFailedToConnect();
+        }
+      })();
+    }
+  }, [connectionRestored, isPrepared, tonConnectUI, wallet, isConnecting]);
+
+  useEffect(() => {
+    tonConnectUI.onModalStateChange((modalState) => {
+      if (modalState.closeReason === 'action-cancelled') {
+        setIsConnecting(false);
+      }
+    });
+  }, [tonConnectUI]);
 
   return (
     <LayoutContainer>
@@ -76,30 +174,47 @@ const Profile = () => {
               {!connectionRestored && (
                 <Skeleton className="w-full h-10 rounded-xl" />
               )}
-
               {connectionRestored && tonConnectUI.connected && (
                 <Button color="success">Get Reward</Button>
               )}
-
               {connectionRestored && !tonConnectUI.connected && (
-                <Button onClick={handleConnect}>Connect wallet</Button>
+                <Chip color="warning" variant="bordered">
+                  Not Connected
+                </Chip>
               )}
             </CardBody>
           </Card>
         )}
 
-        {tonConnectUI.connected && (
-          <>
-            <Card shadow="sm">
-              <CardHeader>
-                <div className="flex flex-col gap-4 w-full">
-                  <div className="flex justify-between items-center w-full">
-                    <p className="text-lg">Wallet</p>
-                    <p className="text-sm text-default-700">
-                      {shortenAddress(userFriendlyAddress)}
-                    </p>
-                  </div>
+        <Card shadow="sm">
+          <CardHeader>
+            <div className="flex flex-col gap-4 w-full">
+              <div className="flex justify-between items-center w-full">
+                <p className="text-lg">Wallet</p>
+                {!isConnecting && tonConnectUI.connected && (
+                  <p className="text-sm text-default-700">
+                    {shortenAddress(userFriendlyAddress)}
+                  </p>
+                )}
+              </div>
 
+              {!connectionRestored && (
+                <Skeleton className="w-full h-10 rounded-xl" />
+              )}
+
+              {connectionRestored && !tonConnectUI.connected && (
+                <Button
+                  color="success"
+                  isLoading={isConnecting}
+                  onClick={handleConnect}
+                >
+                  {isConnecting ? 'Connecting' : 'Connect wallet'}
+                </Button>
+              )}
+
+              {connectionRestored &&
+                tonConnectUI.connected &&
+                !isConnecting && (
                   <div className="flex flex-col gap-2">
                     {addressInfo && (
                       <div className="flex items-center gap-3">
@@ -129,13 +244,12 @@ const Profile = () => {
                       </div>
                     )}
                   </div>
-                </div>
-              </CardHeader>
-            </Card>
+                )}
+            </div>
+          </CardHeader>
+        </Card>
 
-            <Divider />
-          </>
-        )}
+        <Divider />
 
         <div className="flex flex-col gap-3">
           <div className="flex justify-between items-center">
