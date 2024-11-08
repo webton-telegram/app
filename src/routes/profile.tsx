@@ -23,6 +23,7 @@ import cards from 'data/card';
 import useSession from 'hooks/useSession';
 import usePrepareTonConnect from 'hooks/usePrepareTonConnect';
 import useTonAddressInfo from 'hooks/useTonAddressInfo';
+import useJettonBalance from 'hooks/useJettonBalance';
 import { shortenAddress } from 'lib/utils';
 import { syncWallet } from 'service/api/wallet';
 
@@ -36,6 +37,7 @@ const Profile = () => {
   const userFriendlyAddress = useTonAddress();
   const connectionRestored = useIsConnectionRestored();
   const { addressInfo } = useTonAddressInfo();
+  const { jettonBalance } = useJettonBalance();
   const navigate = useNavigate();
   const wallet = useTonWallet();
 
@@ -230,19 +232,20 @@ const Profile = () => {
                       </div>
                     )}
 
-                    {addressInfo && (
-                      <div className="flex items-center gap-3">
-                        <Avatar src="https://ton.org/download/ton_symbol.svg" />
-                        <div className="flex flex-col gap-0.5">
-                          <p className="text-xl font-semibold">
-                            <span className="font-mono">
-                              {addressInfo.balance}
-                            </span>{' '}
-                            <span className=" text-lg">WEBTON</span>
-                          </p>
+                    {jettonBalance &&
+                      jettonBalance.jetton_wallets.length > 0 && (
+                        <div className="flex items-center gap-3">
+                          <Avatar src="https://ton.org/download/ton_symbol.svg" />
+                          <div className="flex flex-col gap-0.5">
+                            <p className="text-xl font-semibold">
+                              <span className="font-mono">
+                                {jettonBalance.jetton_wallets[0].balance}
+                              </span>{' '}
+                              <span className=" text-lg">WEBTON</span>
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
                   </div>
                 )}
             </div>

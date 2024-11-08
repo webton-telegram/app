@@ -1,15 +1,7 @@
 import { useTonAddress, useTonConnectUI } from '@tonconnect/ui-react';
 import { useQuery } from '@tanstack/react-query';
 
-type TonAddressInfo = {
-  balance: string;
-  code: string;
-  data: string;
-  last_transaction_lt: string;
-  last_transaction_hash: string;
-  frozen_hash: string;
-  status: string;
-};
+import type { TonAddressInfo } from 'types/wallet';
 
 export default function useTonAddressInfo() {
   const [tonConnectUI] = useTonConnectUI();
