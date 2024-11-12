@@ -20,6 +20,16 @@ export type ToonItem = {
   author: Author;
 };
 
+export type EpisodeItem = {
+  id: number;
+  episodeNumber: number;
+  viewCount: number;
+  likeCount: number;
+  title: string;
+  thumbnailUrl: string;
+  createdAt: string;
+};
+
 export type RequestToonListParams = {
   page: number;
   limit: number;
@@ -28,7 +38,19 @@ export type RequestToonListParams = {
   searchText?: string;
 };
 
+export type RequestEpisodeListParams = {
+  page: number;
+  limit: number;
+  toonId: number;
+  // sort: 'DESC' | 'ASC';
+};
+
 export type ToonListData = {
   total: number;
   list: ToonItem[];
+};
+
+export type EpisodeListData = {
+  total: number;
+  list: EpisodeItem[];
 };
