@@ -19,11 +19,12 @@ export default function useJettonBalance() {
     return (await res.json()) as JettonWalletData;
   };
 
-  const { isLoading, data } = useQuery({
+  const { isLoading, data, refetch } = useQuery({
     queryKey: ['jetton-balance-info'],
     queryFn: getJettonBalance,
     enabled: isConnected && rawAddress.length > 0,
+    refetchInterval: 10000,
   });
 
-  return { isLoading, jettonBalance: isConnected ? data : undefined };
+  return { isLoading, jettonBalance: isConnected ? data : undefined, refetch };
 }

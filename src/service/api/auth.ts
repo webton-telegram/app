@@ -2,6 +2,7 @@ import api from 'service/api/index';
 
 import type { RequestAuthParams, ResultAuthData } from 'types/auth';
 import type { ResponseData } from 'types/fetch';
+import type { UserInfo } from 'types/user';
 
 export const auth = async (
   params: RequestAuthParams,
@@ -14,4 +15,8 @@ export const auth = async (
   return data.data;
 };
 
-export default null;
+export const getUserInfo = async () => {
+  const { data } = await api.post<ResponseData<UserInfo>>('/v1/user');
+
+  return data.data;
+};

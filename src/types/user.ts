@@ -6,5 +6,6 @@ export type UserInfo = {
   userName: string;
   languageCode: string;
   walletAddress: string;
+  point: number;
   createdAt: string;
 };

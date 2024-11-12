@@ -24,8 +24,8 @@ import useSession from 'hooks/useSession';
 import usePrepareTonConnect from 'hooks/usePrepareTonConnect';
 import useTonAddressInfo from 'hooks/useTonAddressInfo';
 import useJettonBalance from 'hooks/useJettonBalance';
-import { shortenAddress } from 'lib/utils';
-import { syncWallet } from 'service/api/wallet';
+import { formatTon, shortenAddress } from 'lib/utils';
+import { syncWallet, withdrawPoint } from 'service/api/wallet';
 
 import type { TonProof } from 'types/wallet';
 
@@ -37,13 +37,14 @@ const Profile = () => {
   const userFriendlyAddress = useTonAddress();
   const connectionRestored = useIsConnectionRestored();
   const { addressInfo } = useTonAddressInfo();
-  const { jettonBalance } = useJettonBalance();
+  const { jettonBalance, refetch: refetchGetJetton } = useJettonBalance();
   const navigate = useNavigate();
   const wallet = useTonWallet();
 
-  const { status, session } = useSession();
+  const { status, session, update: updateSession } = useSession();
 
   const [isConnecting, setIsConnecting] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const isPrepared = usePrepareTonConnect();
 
@@ -59,6 +60,30 @@ const Profile = () => {
 
   const handleNavigate = (target: string) => () => {
     navigate(target);
+  };
+
+  const handleTransfer = async () => {
+    if (!session || !session.user) {
+      toast.error('Failed to transfer');
+      return;
+    }
+
+    if (session && session.user.point === 0) {
+      toast.error('Not enough point!');
+      return;
+    }
+
+    setIsProcessing(true);
+
+    await toast.promise(withdrawPoint({ amount: session.user.point }), {
+      pending: 'Pending Transaction...',
+      success: 'Complete Transaction',
+      error: 'Failed To Transfer! Please try again.',
+    });
+
+    setIsProcessing(false);
+    await refetchGetJetton();
+    await updateSession();
   };
 
   useEffect(() => {
@@ -169,16 +194,30 @@ const Profile = () => {
                 <p className="text-small text-default-500">
                   @{session.user.userName}
                 </p>
-                <p>{0} Point</p>
+                <p className="text-sm">
+                  <span className="font-semibold">
+                    {session.user.point.toLocaleString()}
+                  </span>{' '}
+                  P
+                </p>
               </div>
             </CardHeader>
             <CardBody>
               {!connectionRestored && (
                 <Skeleton className="w-full h-10 rounded-xl" />
               )}
-              {connectionRestored && tonConnectUI.connected && (
-                <Button color="success">Get Reward</Button>
-              )}
+              {connectionRestored &&
+                tonConnectUI.connected &&
+                session.user.point > 0 && (
+                  <Button
+                    color="success"
+                    isLoading={isProcessing}
+                    disabled={session.user.point <= 0}
+                    onClick={handleTransfer}
+                  >
+                    Transfer WEBTON
+                  </Button>
+                )}
               {connectionRestored && !tonConnectUI.connected && (
                 <Chip color="warning" variant="bordered">
                   Not Connected
@@ -224,7 +263,7 @@ const Profile = () => {
                         <div className="flex flex-col gap-0.5">
                           <p className="text-xl font-semibold">
                             <span className="font-mono">
-                              {addressInfo.balance}
+                              {formatTon(+addressInfo.balance)}
                             </span>{' '}
                             <span className=" text-lg">TON</span>
                           </p>
@@ -239,7 +278,9 @@ const Profile = () => {
                           <div className="flex flex-col gap-0.5">
                             <p className="text-xl font-semibold">
                               <span className="font-mono">
-                                {jettonBalance.jetton_wallets[0].balance}
+                                {formatTon(
+                                  +jettonBalance.jetton_wallets[0].balance,
+                                )}
                               </span>{' '}
                               <span className=" text-lg">WEBTON</span>
                             </p>

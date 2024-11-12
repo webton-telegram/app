@@ -1,8 +1,15 @@
-import { type ReactNode, useEffect, useState } from 'react';
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import WebApp from '@twa-dev/sdk';
+import { produce } from 'immer';
 
 import AuthContext from 'context/AuthContext';
-import { auth } from 'service/api/auth';
+import { auth, getUserInfo } from 'service/api/auth';
 
 import type { AuthState } from 'types/auth';
 
@@ -10,6 +17,18 @@ const initialState = { status: 'loading' as const };
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<AuthState>(initialState);
+
+  const update = useCallback(async () => {
+    const userInfo = await getUserInfo();
+
+    setState(
+      produce((draft) => {
+        if (draft.session) {
+          draft.session.user = userInfo;
+        }
+      }),
+    );
+  }, []);
 
   useEffect(() => {
     let ignore = false;
@@ -39,7 +58,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
+  const key = useMemo(() => ({ ...state, update }), [state, update]);
+
+  return <AuthContext.Provider value={key}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

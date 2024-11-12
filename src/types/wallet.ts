@@ -48,3 +48,11 @@ export type JettonWalletData = {
   jetton_wallets: JettonWallet[];
   address_book: AddressBook;
 };
+
+export type RequestWithdrawPointParams = {
+  amount: number;
+};
+
+export type ResultWithdrawPoint = {
+  txHash: string;
+};

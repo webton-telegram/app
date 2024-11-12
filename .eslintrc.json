@@ -80,7 +80,7 @@
       "error",
       {
         "props": true,
-        "ignorePropertyModificationsForRegex": ["^state$", "^ctx$"]
+        "ignorePropertyModificationsForRegex": ["^state$", "^ctx$","draft"]
       }
     ],
     "react-hooks/rules-of-hooks": "error",

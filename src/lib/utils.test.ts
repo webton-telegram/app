@@ -1,4 +1,4 @@
-import { cn, shortenAddress } from './utils';
+import { cn, formatTon, shortenAddress } from './utils';
 
 describe('utility', () => {
   describe('cn()', () => {
@@ -47,6 +47,13 @@ describe('utility', () => {
         'UQDdpiiSPtwMxsmDahrVZqqYJN2urIUmsRAfWwaAlmKQE7ys',
       );
       expect(result).toBe('UQDd...ys');
+    });
+  });
+
+  describe('formatTon', () => {
+    it('returns nano to TON', () => {
+      const result = formatTon(500000000);
+      expect(result).toBe(0.5);
     });
   });
 });

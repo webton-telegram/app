@@ -16,11 +16,11 @@ export default function useTonAddressInfo() {
     return (await res.json()) as TonAddressInfo;
   };
 
-  const { isLoading, data } = useQuery({
+  const { isLoading, data, refetch } = useQuery({
     queryKey: ['ton-address-info'],
     queryFn: getAddressInfo,
     enabled: isConnected && rawAddress.length > 0,
   });
 
-  return { isLoading, addressInfo: isConnected ? data : undefined };
+  return { isLoading, addressInfo: isConnected ? data : undefined, refetch };
 }
