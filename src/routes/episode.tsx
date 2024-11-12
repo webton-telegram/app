@@ -11,7 +11,6 @@ import type { RequestEpisodeListParams, EpisodeListData } from 'types/toon';
 
 import LayoutContainer from 'components/layout/LayoutContainer';
 
-// import episodeList from 'data/episode';
 import { cn, formatCompactNumber } from 'lib/utils';
 import { getEpisodeList } from 'service/api/toon';
 
