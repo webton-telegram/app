@@ -4,11 +4,11 @@ import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import WebApp from '@twa-dev/sdk';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Flip, ToastContainer } from 'react-toastify';
 
 import AuthProvider from 'components/AuthProvider';
 
 import 'react-toastify/dist/ReactToastify.css';
+import ToastContainer from 'components/ToastContainer';
 
 type Props = {
   children: ReactNode;
@@ -31,19 +31,7 @@ const AppProvider = ({ children }: Props) => {
             <NextThemesProvider attribute="class">
               {children}
             </NextThemesProvider>
-            <ToastContainer
-              position="top-center"
-              autoClose={3000}
-              hideProgressBar
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss={false}
-              draggable
-              pauseOnHover={false}
-              theme="colored"
-              transition={Flip}
-            />
+            <ToastContainer />
           </NextUIProvider>
         </QueryClientProvider>
       </TonConnectUIProvider>
