@@ -11,6 +11,7 @@ import { AiOutlineLike } from 'react-icons/ai';
 import { Button, Image, Skeleton } from '@nextui-org/react';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
+import WebApp from '@twa-dev/sdk';
 
 import LayoutContainer from 'components/layout/LayoutContainer';
 
@@ -54,7 +55,9 @@ const Detail = () => {
     [lastScrollY],
   );
 
-  const handleWriterClick = (writerId: number) => () => {
+  const handleWriterClick = () => () => {
+    if (!data?.data.episode.author.id) return;
+    const writerId = data?.data.episode.author.id;
     navigate(`/writer/${writerId}`);
   };
 
@@ -87,7 +90,7 @@ const Detail = () => {
   }, [controlButtons]);
 
   useEffect(() => {
-    if (!id) navigate('/');
+    if (!id || !WebApp.initData) navigate('/');
   }, [id, navigate]);
 
   if (!id) return null;
@@ -119,7 +122,7 @@ const Detail = () => {
               <Button
                 className="min-w-0 h-auto p-0"
                 variant="light"
-                onClick={handleWriterClick(1)}
+                onClick={handleWriterClick}
               >
                 <p className="text-sm text-gray-400 font-bold">
                   {data?.data.episode.author.firstName}{' '}

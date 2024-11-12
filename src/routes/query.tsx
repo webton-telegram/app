@@ -15,11 +15,9 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 import type { RequestToonListParams, ToonListData } from 'types/toon';
 
-import Card from 'components/Card';
 import Card2 from 'components/Card2';
 import LayoutContainer from 'components/layout/LayoutContainer';
 
-import cards from 'data/card';
 import { getToonList } from 'service/api/toon';
 
 interface FetchPageResult {
@@ -45,18 +43,10 @@ const Query = () => {
     [input],
   );
 
-  const filteredCards = useMemo(
-    () =>
-      cards.filter((card) =>
-        card.title.toLowerCase().includes(debouncedInput.toLowerCase()),
-      ),
-    [debouncedInput],
-  );
-
   const fetchPage = useCallback(
     async (pageParam: string): Promise<FetchPageResult> => {
       const data = await getToonList({
-        page: pageParam ? Number(pageParam) - 1 : 0,
+        page: debouncedInput ? (pageParam ? Number(pageParam) - 1 : 0) : 0,
         limit: LIMIT,
         orderBy: 'popular',
         sort: 'DESC',
@@ -71,19 +61,19 @@ const Query = () => {
   const {
     data,
     isLoading,
+    isFetching,
     isError,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
   } = useInfiniteQuery<FetchPageResult, Error>({
-    queryKey: ['query'],
+    queryKey: ['query', debouncedInput],
     queryFn: ({ pageParam }) => fetchPage(pageParam as string),
     initialPageParam: '',
     getNextPageParam: (lastPage, pages) => {
       if (pages.length * LIMIT > lastPage.data.total) return undefined;
       return pages.length + 1;
     },
-    enabled: !!debouncedInput,
   });
 
   const items = useMemo(
@@ -137,53 +127,47 @@ const Query = () => {
         />
       </div>
 
-      {!debouncedInput && (
-        <div className="flex flex-col gap-3">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg">Recommend</h2>
-            <button
-              className="flex justify-center items-center gap-1 text-default-500 text-sm"
-              onClick={handleNavigate}
-            >
-              More <FaChevronRight size={12} />
-            </button>
-          </div>
-
-          <div className="relative z-0 grid grid-cols-3 gap-2 pb-4">
-            {cards.slice(0, 6).map((card) => (
-              <Card key={`recommend-${card.title}`} {...card} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {debouncedInput && filteredCards.length > 0 && (
+      {items.length > 0 && (
         <>
           {isError ? (
             <div className="flex justify-center items-center min-h-[50vh]">
               <p>{ERROR_MESSAGE}</p>
             </div>
           ) : (
-            <div className="relative z-0 grid grid-cols-3 gap-2">
-              {isLoading
-                ? [1, 2, 3, 4, 5, 6, 7, 8, 9].map((idx) => (
-                    <div
-                      key={`skeleton-${idx}`}
-                      className="aspect-[1/2] w-full"
-                    >
-                      <Skeleton className="w-full h-full rounded-lg" />
-                    </div>
-                  ))
-                : items.map((card) => (
-                    <Card2 key={`card-${card.id}`} {...card} />
-                  ))}
+            <div className="flex flex-col gap-3">
+              {!debouncedInput && (
+                <div className="flex justify-between items-center">
+                  <h2 className="text-lg">Recommend</h2>
+                  <button
+                    className="flex justify-center items-center gap-1 text-default-500 text-sm"
+                    onClick={handleNavigate}
+                  >
+                    More <FaChevronRight size={12} />
+                  </button>
+                </div>
+              )}
+
+              <div className="relative z-0 grid grid-cols-3 gap-2">
+                {isLoading || isFetching
+                  ? [1, 2, 3, 4, 5, 6, 7, 8, 9].map((idx) => (
+                      <div
+                        key={`skeleton-${idx}`}
+                        className="aspect-[1/2] w-full"
+                      >
+                        <Skeleton className="w-full h-full rounded-lg" />
+                      </div>
+                    ))
+                  : items.map((card) => (
+                      <Card2 key={`card-${card.id}`} {...card} />
+                    ))}
+              </div>
             </div>
           )}
           <div ref={observerTarget} />
         </>
       )}
 
-      {debouncedInput && items.length === 0 && (
+      {!isLoading && !isFetching && items.length === 0 && (
         <div className="flex justify-center items-center min-h-[85vh]">
           <p>No results found for your search.</p>
         </div>

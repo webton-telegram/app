@@ -69,7 +69,9 @@ const Episode = () => {
     navigate(`/detail/${detailId}`);
   };
 
-  const handleWriterClick = (writerId: number) => () => {
+  const handleWriterClick = () => {
+    if (items.length === 0) return;
+    const writerId = items[0].author.id;
     navigate(`/writer/${writerId}`);
   };
 
@@ -140,7 +142,7 @@ const Episode = () => {
               <Button
                 className="min-w-0 h-auto p-0"
                 variant="light"
-                onClick={handleWriterClick(1)}
+                onClick={handleWriterClick}
               >
                 <p className="text-sm text-gray-400 font-bold">leehama</p>
               </Button>
