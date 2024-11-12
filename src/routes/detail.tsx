@@ -8,12 +8,16 @@ import {
   FaArrowLeft,
 } from 'react-icons/fa';
 import { AiOutlineLike } from 'react-icons/ai';
-import { Button, Image } from '@nextui-org/react';
+import { Button, Image, Skeleton } from '@nextui-org/react';
+import { useQuery } from '@tanstack/react-query';
+import { format } from 'date-fns';
 
 import LayoutContainer from 'components/layout/LayoutContainer';
 
-import { formatCompactNumber } from 'lib/utils';
-import detailImages from 'data/detail';
+import { cn, formatCompactNumber } from 'lib/utils';
+import { getEpisode } from 'service/api/episode';
+
+const ERROR_MESSAGE = 'A system error occurred. Please try again later.';
 
 const Detail = () => {
   const [isScrollEnded, setIsScrollEnded] = useState(false);
@@ -23,6 +27,17 @@ const Detail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const observerRef = useRef<HTMLDivElement>(null);
+
+  const fetchEpisode = async () => {
+    const data = await getEpisode(Number(id));
+    return { data };
+  };
+
+  const { isLoading, isError, data } = useQuery({
+    queryKey: ['episode-detail', id],
+    queryFn: fetchEpisode,
+    enabled: !!id,
+  });
 
   const controlButtons = useCallback(
     (event: Event) => {
@@ -77,52 +92,103 @@ const Detail = () => {
 
   if (!id) return null;
 
+  if (isError || !data) {
+    <LayoutContainer isSpacing={false}>
+      <div className="flex justify-center items-center min-h-[90vh]">
+        <p>{ERROR_MESSAGE}</p>
+      </div>
+    </LayoutContainer>;
+  }
+
   return (
     <LayoutContainer isSpacing={false}>
       <div className="space-y-2 p-4">
-        <h2 className="text-lg font-semibold">1 - Chopped Onions</h2>
+        {isLoading ? (
+          <Skeleton className="w-full h-7 rounded-lg" />
+        ) : (
+          <h2 className="text-lg font-semibold">{data?.data.episode.title}</h2>
+        )}
         <div className="flex gap-2">
-          <Button
-            className="min-w-0 h-auto p-0"
-            variant="light"
-            onClick={handleWriterClick(1)}
-          >
-            <p className="text-sm text-gray-400 font-bold">leehama</p>
-          </Button>
-          <p className="text-sm text-gray-400">2024-08-30 00:00</p>
+          {isLoading ? (
+            <>
+              <Skeleton className="w-14 h-5 rounded-lg" />
+              <Skeleton className="w-32 h-5 rounded-lg" />
+            </>
+          ) : (
+            <>
+              <Button
+                className="min-w-0 h-auto p-0"
+                variant="light"
+                onClick={handleWriterClick(1)}
+              >
+                <p className="text-sm text-gray-400 font-bold">
+                  {data?.data.episode.author.firstName}{' '}
+                  {data?.data.episode.author.lastName}
+                </p>
+              </Button>
+              {data?.data.episode.createdAt && (
+                <p className="text-sm text-gray-400">
+                  {format(
+                    new Date(data.data.episode.createdAt),
+                    'MM/dd/yyyy HH:mm',
+                  )}
+                </p>
+              )}
+            </>
+          )}
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 text-gray-400">
-            <GrView className="text-gray-400" />
-            <span className="text-xs">
-              {formatCompactNumber.format(17293200)}
-            </span>
+            {isLoading ? (
+              <Skeleton className="w-10 h-5 rounded-lg" />
+            ) : (
+              <>
+                <GrView className="text-gray-400" />
+                <span className="text-xs">
+                  {formatCompactNumber.format(
+                    data?.data.episode.viewCount || 0,
+                  )}
+                </span>
+              </>
+            )}
           </div>
           <div className="flex items-center gap-1 text-gray-400">
-            <FaThumbsUp className="text-gray-400" />
-            <span className="text-xs">
-              {formatCompactNumber.format(6293200)}
-            </span>
+            {isLoading ? (
+              <Skeleton className="w-10 h-5 rounded-lg" />
+            ) : (
+              <>
+                <FaThumbsUp className="text-gray-400" />
+                <span className="text-xs">
+                  {formatCompactNumber.format(
+                    data?.data.episode.likeCount || 0,
+                  )}
+                </span>
+              </>
+            )}
           </div>
         </div>
       </div>
+
       <div>
-        {detailImages.map((image, idx) => (
+        {isLoading ? (
+          <Skeleton className="w-full h-screen rounded-lg" />
+        ) : (
           <Image
             shadow="none"
             width="100%"
-            alt={`image-${idx}`}
+            alt="episode"
             className="w-full object-cover rounded-none"
-            src={image}
+            src={data?.data.url || ''}
           />
-        ))}
+        )}
       </div>
       <div ref={observerRef} className="h-1 mb-10" />
 
       <div
-        className={`fixed z-10 bottom-[168px] left-3 flex items-center justify-between w-[calc(100%-24px)] gap-2 transition-opacity duration-300 ${
-          isScrollEnded ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+        className={cn(
+          'fixed z-10 bottom-[168px] left-3 flex items-center justify-between w-[calc(100%-24px)] gap-2 transition-opacity duration-300',
+          isScrollEnded ? 'opacity-100' : 'opacity-0 pointer-events-none',
+        )}
       >
         <Button className="flex-1" color="primary" variant="faded">
           <AiOutlineLike />
@@ -144,7 +210,7 @@ const Detail = () => {
           <Button className="min-w-0">
             <FaArrowLeft />
           </Button>
-          <Button>Episode List</Button>
+          <Button onClick={() => navigate(-1)}>Episode List</Button>
           <Button className="min-w-0">
             <FaArrowRight />
           </Button>

@@ -7,12 +7,12 @@ import { FaArrowRightArrowLeft } from 'react-icons/fa6';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 
-import type { RequestEpisodeListParams, EpisodeListData } from 'types/toon';
+import type { RequestEpisodeListParams, EpisodeListData } from 'types/episode';
 
 import LayoutContainer from 'components/layout/LayoutContainer';
 
 import { cn, formatCompactNumber } from 'lib/utils';
-import { getEpisodeList } from 'service/api/toon';
+import { getEpisodeList } from 'service/api/episode';
 
 interface FetchPageResult {
   data: EpisodeListData;
@@ -57,6 +57,7 @@ const Episode = () => {
       if (pages.length * LIMIT > lastPage.data.total) return undefined;
       return pages.length + 1;
     },
+    enabled: !!id,
   });
 
   const items = useMemo(
@@ -130,8 +131,8 @@ const Episode = () => {
         <div className="px-4 space-y-4 text-center">
           {isLoading ? (
             <div className="flex flex-col justify-center items-center gap-2">
-              <Skeleton className="w-[200px] h-7 rounded-lg" />
-              <Skeleton className="w-[120px] h-5 rounded-lg" />
+              <Skeleton className="w-48 h-7 rounded-lg" />
+              <Skeleton className="w-32 h-5 rounded-lg" />
             </div>
           ) : (
             <div>
