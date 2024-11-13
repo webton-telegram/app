@@ -218,7 +218,7 @@ const Detail = () => {
           <Button
             className={cn(
               'min-w-0',
-              !data?.data.prevEpisode?.id && 'opacity-30',
+              !data?.data.prevEpisode?.id && '!opacity-30',
             )}
             disabled={!data?.data.prevEpisode?.id}
             onClick={handleEpisodeMoveClick(data?.data.prevEpisode?.id)}
@@ -231,7 +231,7 @@ const Detail = () => {
           <Button
             className={cn(
               'min-w-0',
-              !data?.data.nextEpisode?.id && 'opacity-30',
+              !data?.data.nextEpisode?.id && '!opacity-30',
             )}
             disabled={!data?.data.nextEpisode?.id}
             onClick={handleEpisodeMoveClick(data?.data.nextEpisode?.id)}

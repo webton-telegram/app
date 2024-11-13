@@ -10,7 +10,6 @@ import {
 
 import cards from 'data/card';
 import selectedList from 'data/selectedBox';
-import useActivateBackButton from 'hooks/useActivateBackButton';
 
 import Card from 'components/Card';
 import LayoutContainer from 'components/layout/LayoutContainer';
@@ -20,8 +19,6 @@ const Recommended = () => {
   const [selectedKeys, setSelectedKeys] = useState(
     new Set([selectedList[0].key]),
   );
-
-  useActivateBackButton('/profile');
 
   const selectedText = useMemo(
     () =>
