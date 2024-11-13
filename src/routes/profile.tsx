@@ -92,6 +92,10 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    updateSession();
+  }, [updateSession]);
+
+  useEffect(() => {
     if (!connectionRestored) {
       return;
     }
@@ -207,13 +211,15 @@ const Profile = () => {
                 </p>
               </div>
             </CardHeader>
-            <CardBody>
-              {!connectionRestored && (
+            {!connectionRestored && (
+              <CardBody>
                 <Skeleton className="w-full h-10 rounded-xl" />
-              )}
-              {connectionRestored &&
-                tonConnectUI.connected &&
-                session.user.point > 0 && (
+              </CardBody>
+            )}
+            {connectionRestored &&
+              tonConnectUI.connected &&
+              session.user.point > 0 && (
+                <CardBody>
                   <Button
                     color="success"
                     isLoading={isProcessing}
@@ -222,13 +228,15 @@ const Profile = () => {
                   >
                     Transfer WEBTON
                   </Button>
-                )}
-              {connectionRestored && !tonConnectUI.connected && (
+                </CardBody>
+              )}
+            {connectionRestored && !tonConnectUI.connected && (
+              <CardBody>
                 <Chip color="warning" variant="bordered">
                   Not Connected
                 </Chip>
-              )}
-            </CardBody>
+              </CardBody>
+            )}
           </Card>
         )}
 
