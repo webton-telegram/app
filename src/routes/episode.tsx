@@ -26,6 +26,7 @@ const Episode = () => {
   const navigate = useNavigate();
 
   const [isExpanded, setIsExpanded] = useState(false);
+  const [sort, setSort] = useState<'DESC' | 'ASC'>('DESC');
 
   const observerTarget = useRef<HTMLDivElement>(null);
 
@@ -35,11 +36,12 @@ const Episode = () => {
         page: pageParam ? Number(pageParam) - 1 : 0,
         limit: LIMIT,
         toonId: Number(id),
+        sort,
       } as RequestEpisodeListParams);
 
       return { data };
     },
-    [id],
+    [id, sort],
   );
 
   const {
@@ -50,7 +52,7 @@ const Episode = () => {
     hasNextPage,
     fetchNextPage,
   } = useInfiniteQuery<FetchPageResult, Error>({
-    queryKey: ['episode-list', id],
+    queryKey: ['episode-list', id, sort],
     queryFn: ({ pageParam }) => fetchPage(pageParam as string),
     initialPageParam: '',
     getNextPageParam: (lastPage, pages) => {
@@ -216,9 +218,12 @@ const Episode = () => {
           ) : (
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold">119 episodes</p>
-              <figure className="rotate-90">
+              <Button
+                className="rotate-90 !w-auto !min-w-0 !h-auto !min-h-0 !px-0 !py-0"
+                onClick={() => setSort(sort === 'DESC' ? 'ASC' : 'DESC')}
+              >
                 <FaArrowRightArrowLeft />
-              </figure>
+              </Button>
             </div>
           )}
 

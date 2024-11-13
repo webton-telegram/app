@@ -25,7 +25,7 @@ export type RequestEpisodeListParams = {
   page: number;
   limit: number;
   toonId: number;
-  // sort: 'DESC' | 'ASC';
+  sort: 'DESC' | 'ASC';
 };
 
 export type EpisodeListData = {
