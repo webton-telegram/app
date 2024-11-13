@@ -30,8 +30,8 @@ const AppProvider = ({ children }: Props) => {
           <NextUIProvider>
             <NextThemesProvider attribute="class">
               {children}
+              <ToastContainer />
             </NextThemesProvider>
-            <ToastContainer />
           </NextUIProvider>
         </QueryClientProvider>
       </TonConnectUIProvider>

@@ -1,12 +1,15 @@
-import { useTheme } from 'next-themes';
-import { Flip, ToastContainer as RTContainer } from 'react-toastify';
+import { cssTransition, ToastContainer as RTContainer } from 'react-toastify';
+
+const Fade = cssTransition({
+  collapseDuration: 500,
+  enter: 'toast-fade-in',
+  exit: 'toast-fade-out',
+});
 
 const ToastContainer = () => {
-  const { resolvedTheme } = useTheme();
-
   return (
     <RTContainer
-      position="top-center"
+      position="bottom-center"
       autoClose={3000}
       hideProgressBar
       newestOnTop={false}
@@ -15,8 +18,8 @@ const ToastContainer = () => {
       pauseOnFocusLoss={false}
       draggable
       pauseOnHover={false}
-      theme={resolvedTheme}
-      transition={Flip}
+      theme="light"
+      transition={Fade}
     />
   );
 };

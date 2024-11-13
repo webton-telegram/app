@@ -1,3 +1,5 @@
+@import './styles/custom-toastify.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,7 +8,6 @@ body {
   overflow: hidden;
 }
 
-
-[data-tc-modal="true"] {
+[data-tc-modal='true'] {
   overflow-y: hidden;
 }

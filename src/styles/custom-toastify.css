@@ -1,0 +1,90 @@
+@-webkit-keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+
+@-webkit-keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.toast-fade-in {
+    -webkit-animation: fade-in 0.2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    animation: fade-in 0.2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+.toast-fade-out {
+    -webkit-animation: fade-out 0.2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    animation: fade-out 0.2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+.Toastify__toast-container--top-center {
+    width: 100%;
+    max-width: calc(500px - 3rem);
+
+    @media screen and (max-width: 480px) {
+        left: 1.5rem;
+        top: 1em;
+        max-width: calc(100vw - 3rem);
+    }
+}
+
+.Toastify__toast-container--bottom-center {
+    width: 100%;
+    max-width: calc(500px - 3rem);
+
+    @media screen and (max-width: 480px) {
+        left: 1.5rem;
+        bottom: 5rem;
+        max-width: calc(100vw - 3rem);
+    }
+}
+
+.Toastify__toast {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    margin-bottom: 0.5rem;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: -0.3px;
+    min-height: auto;
+    background-color: rgb(63 63 70 / 0.8) !important;
+    color: rgb(255 255 255 / 1);
+}
+
+.Toastify__toast-body {
+    margin: 0;
+}
+
+
+.Toastify__close-button {
+    color: transparent;
+}

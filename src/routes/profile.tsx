@@ -86,7 +86,10 @@ const Profile = () => {
       return;
     }
 
-    setIsProcessing(false);
+    setTimeout(() => {
+      setIsProcessing(false);
+    }, 3000);
+
     await refetchGetJetton();
     await updateSession();
   };
