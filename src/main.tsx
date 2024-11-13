@@ -50,11 +50,11 @@ const router = createBrowserRouter([
     element: <Recommended />,
   },
   {
-    path: '/episode/:id',
+    path: '/episode/:toonId',
     element: <Episode />,
   },
   {
-    path: '/detail/:id',
+    path: '/detail/:toonId/:episodeId',
     element: <Detail />,
   },
   {

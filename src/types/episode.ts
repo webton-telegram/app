@@ -35,5 +35,7 @@ export type EpisodeListData = {
 
 export type EpisodeData = {
   episode: EpisodeItem;
+  prevEpisode: EpisodeItem | null;
+  nextEpisode: EpisodeItem | null;
   url: string;
 };

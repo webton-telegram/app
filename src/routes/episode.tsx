@@ -22,7 +22,7 @@ const LIMIT = 20;
 const ERROR_MESSAGE = 'A system error occurred. Please try again later.';
 
 const Episode = () => {
-  const { id } = useParams();
+  const { toonId } = useParams();
   const navigate = useNavigate();
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -35,13 +35,13 @@ const Episode = () => {
       const data = await getEpisodeList({
         page: pageParam ? Number(pageParam) - 1 : 0,
         limit: LIMIT,
-        toonId: Number(id),
+        toonId: Number(toonId),
         sort,
       } as RequestEpisodeListParams);
 
       return { data };
     },
-    [id, sort],
+    [toonId, sort],
   );
 
   const {
@@ -52,14 +52,14 @@ const Episode = () => {
     hasNextPage,
     fetchNextPage,
   } = useInfiniteQuery<FetchPageResult, Error>({
-    queryKey: ['episode-list', id, sort],
+    queryKey: ['episode-list', toonId, sort],
     queryFn: ({ pageParam }) => fetchPage(pageParam as string),
     initialPageParam: '',
     getNextPageParam: (lastPage, pages) => {
       if (pages.length * LIMIT > lastPage.data.total) return undefined;
       return pages.length + 1;
     },
-    enabled: !!id,
+    enabled: !!toonId,
   });
 
   const items = useMemo(
@@ -67,8 +67,8 @@ const Episode = () => {
     [data?.pages],
   );
 
-  const handleClick = (detailId: number) => () => {
-    navigate(`/detail/${detailId}`);
+  const handleClick = (episodeId: number) => () => {
+    navigate(`/detail/${toonId}/${episodeId}`);
   };
 
   const handleWriterClick = () => {
@@ -100,10 +100,10 @@ const Episode = () => {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   useEffect(() => {
-    if (!id) navigate('/');
-  }, [id, navigate]);
+    if (!toonId) navigate('/');
+  }, [toonId, navigate]);
 
-  if (!id) return null;
+  if (!toonId) return null;
 
   if (isError) {
     return (
