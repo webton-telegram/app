@@ -272,7 +272,7 @@ const Profile = () => {
                     )}
 
                     {jettonBalance &&
-                      jettonBalance.jetton_wallets.length > 0 && (
+                      jettonBalance.jetton_wallets?.length > 0 && (
                         <div className="flex items-center gap-3">
                           <Avatar src="https://ton.org/download/ton_symbol.svg" />
                           <div className="flex flex-col gap-0.5">
