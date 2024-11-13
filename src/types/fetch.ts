@@ -9,3 +9,9 @@ export type ResponseErrorData = {
   traceId: string;
   message: string;
 };
+
+export type ResponseTonCenterError = {
+  ok: boolean;
+  result: string;
+  code: number;
+};

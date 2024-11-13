@@ -8,8 +8,11 @@ import {
   Chip,
   Divider,
   Skeleton,
+  Snippet,
 } from '@nextui-org/react';
 import { FaChevronRight } from 'react-icons/fa';
+import { MdContentCopy } from 'react-icons/md';
+import { RiRefreshLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import {
   useIsConnectionRestored,
@@ -36,8 +39,16 @@ const Profile = () => {
   const [tonConnectUI] = useTonConnectUI();
   const userFriendlyAddress = useTonAddress();
   const connectionRestored = useIsConnectionRestored();
-  const { addressInfo } = useTonAddressInfo();
-  const { jettonBalance, refetch: refetchGetJetton } = useJettonBalance();
+  const {
+    addressInfo,
+    refetch: refetchAddressInfo,
+    isError: isErrorAddressInfo,
+  } = useTonAddressInfo();
+  const {
+    jettonBalance,
+    refetch: refetchGetJetton,
+    isError: isErrorJettonBalance,
+  } = useJettonBalance();
   const navigate = useNavigate();
   const wallet = useTonWallet();
 
@@ -45,8 +56,19 @@ const Profile = () => {
 
   const [isConnecting, setIsConnecting] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isReloadableWallet, setIsReloadableWallet] = useState(true);
 
   const isPrepared = usePrepareTonConnect();
+
+  const handleReloadWallet = async () => {
+    setIsReloadableWallet(false);
+    await refetchAddressInfo();
+    await refetchGetJetton();
+
+    setTimeout(() => {
+      setIsReloadableWallet(true);
+    }, 10000);
+  };
 
   const handleConnect = async () => {
     if (!isPrepared) {
@@ -247,11 +269,34 @@ const Profile = () => {
           <CardHeader>
             <div className="flex flex-col gap-4 w-full">
               <div className="flex justify-between items-center w-full">
-                <p className="text-lg">Wallet</p>
+                <div className="flex items-center gap-1">
+                  <p className="text-lg">Wallet</p>
+                  {}
+                  <Button
+                    isIconOnly
+                    variant="light"
+                    size="sm"
+                    disabled={!isReloadableWallet}
+                    onClick={handleReloadWallet}
+                  >
+                    <RiRefreshLine size={16} />
+                  </Button>
+                </div>
                 {!isConnecting && tonConnectUI.connected && (
-                  <p className="text-sm text-default-700">
+                  <Snippet
+                    symbol=""
+                    disableTooltip
+                    size="sm"
+                    variant="flat"
+                    color="default"
+                    copyIcon={<MdContentCopy size={16} />}
+                    classNames={{
+                      base: 'bg-transparent',
+                      copyButton: 'min-w-6 w-6 h-6',
+                    }}
+                  >
                     {shortenAddress(userFriendlyAddress)}
-                  </p>
+                  </Snippet>
                 )}
               </div>
 
@@ -276,14 +321,18 @@ const Profile = () => {
                     {addressInfo && (
                       <div className="flex items-center gap-3">
                         <Avatar src="https://ton.org/download/ton_symbol.svg" />
-                        <div className="flex flex-col gap-0.5">
-                          <p className="text-xl font-semibold">
-                            <span className="font-mono">
-                              {formatTon(+addressInfo.balance)}
-                            </span>{' '}
-                            <span className=" text-lg">TON</span>
-                          </p>
-                        </div>
+                        {!isErrorAddressInfo ? (
+                          <div className="flex flex-col gap-0.5">
+                            <p className="text-xl font-semibold">
+                              <span className="font-mono">
+                                {formatTon(+addressInfo.balance)}
+                              </span>{' '}
+                              <span className=" text-lg">TON</span>
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="text-default-800">Failed to load TON</p>
+                        )}
                       </div>
                     )}
 
@@ -291,16 +340,22 @@ const Profile = () => {
                       jettonBalance.jetton_wallets?.length > 0 && (
                         <div className="flex items-center gap-3">
                           <Avatar src="https://ton.org/download/ton_symbol.svg" />
-                          <div className="flex flex-col gap-0.5">
-                            <p className="text-xl font-semibold">
-                              <span className="font-mono">
-                                {formatTon(
-                                  +jettonBalance.jetton_wallets[0].balance,
-                                )}
-                              </span>{' '}
-                              <span className=" text-lg">WEBTON</span>
+                          {!isErrorJettonBalance ? (
+                            <div className="flex flex-col gap-0.5">
+                              <p className="text-xl font-semibold">
+                                <span className="font-mono">
+                                  {formatTon(
+                                    +jettonBalance.jetton_wallets[0].balance,
+                                  )}
+                                </span>{' '}
+                                <span className=" text-lg">WEBTON</span>
+                              </p>
+                            </div>
+                          ) : (
+                            <p className="text-default-800">
+                              Failed to load WEBTON
                             </p>
-                          </div>
+                          )}
                         </div>
                       )}
                   </div>
