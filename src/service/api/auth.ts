@@ -16,7 +16,7 @@ export const auth = async (
 };
 
 export const getUserInfo = async () => {
-  const { data } = await api.post<ResponseData<UserInfo>>('/v1/user');
+  const { data } = await api.get<ResponseData<UserInfo>>('/v1/user');
 
   return data.data;
 };
