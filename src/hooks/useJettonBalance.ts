@@ -15,7 +15,7 @@ export default function useJettonBalance() {
 
   const getJettonBalance = async () => {
     const res = await fetch(
-      `https://${import.meta.env.DEV ? '' : ''}toncenter.com/api/v3/jetton/wallets?owner_address=${rawAddress}&jetton_address=${WEBTON_JETTON_ADDRESS}&exclude_zero_balance=true&limit=10&offset=0`,
+      `https://${import.meta.env.DEV ? 'testnet.' : 'testnet.'}toncenter.com/api/v3/jetton/wallets?owner_address=${rawAddress}&jetton_address=${WEBTON_JETTON_ADDRESS}&exclude_zero_balance=true&limit=10&offset=0`,
     );
     return (await res.json()) as JettonWalletData;
   };
