@@ -289,6 +289,7 @@ const Profile = () => {
                     size="sm"
                     variant="flat"
                     color="default"
+                    codeString={userFriendlyAddress}
                     copyIcon={<MdContentCopy size={16} />}
                     classNames={{
                       base: 'bg-transparent',
