@@ -309,11 +309,15 @@ const Episode = () => {
                         </p>
                         <div className="flex items-center gap-1">
                           <GrView className="text-gray-400" />
-                          <span className="text-xs">{episode.viewCount}</span>
+                          <span className="text-xs">
+                            {formatCompactNumber.format(episode.viewCount)}
+                          </span>
                         </div>
                         <div className="flex items-center gap-1">
                           <FaThumbsUp className="text-gray-400" size={14} />
-                          <p className="text-xs">{episode.likeCount}</p>
+                          <span className="text-xs">
+                            {formatCompactNumber.format(episode.likeCount)}
+                          </span>
                         </div>
                       </div>
                     </div>
