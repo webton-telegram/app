@@ -75,11 +75,16 @@ const Profile = () => {
 
     setIsProcessing(true);
 
-    await toast.promise(withdrawPoint({ amount: session.user.point }), {
-      pending: 'Pending Transaction...',
-      success: 'Complete Transaction',
-      error: 'Failed To Transfer! Please try again.',
-    });
+    try {
+      await toast.promise(withdrawPoint({ amount: session.user.point }), {
+        pending: 'Pending Transaction...',
+        success: 'Complete Transaction',
+        error: 'Failed To Transfer! Please try again.',
+      });
+    } catch {
+      setIsProcessing(false);
+      return;
+    }
 
     setIsProcessing(false);
     await refetchGetJetton();
