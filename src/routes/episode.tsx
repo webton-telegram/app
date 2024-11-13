@@ -4,7 +4,7 @@ import { Button, Card, Image, Skeleton } from '@nextui-org/react';
 import { GrView } from 'react-icons/gr';
 import { FaThumbsUp, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { FaArrowRightArrowLeft } from 'react-icons/fa6';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 
 import type { RequestEpisodeListParams, EpisodeListData } from 'types/episode';
@@ -13,6 +13,7 @@ import LayoutContainer from 'components/layout/LayoutContainer';
 
 import { cn, formatCompactNumber } from 'lib/utils';
 import { getEpisodeList } from 'service/api/episode';
+import { getToonDetail } from 'service/api/toon';
 
 interface FetchPageResult {
   data: EpisodeListData;
@@ -27,8 +28,24 @@ const Episode = () => {
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [sort, setSort] = useState<'DESC' | 'ASC'>('DESC');
+  const [total, setTotal] = useState(0);
 
   const observerTarget = useRef<HTMLDivElement>(null);
+
+  const fetchToonDetail = async () => {
+    const data = await getToonDetail(Number(toonId));
+    return { data };
+  };
+
+  const {
+    isLoading: toonIsLoading,
+    isError: toonIsError,
+    data: toonDetailData,
+  } = useQuery({
+    queryKey: ['toon-info', toonId],
+    queryFn: fetchToonDetail,
+    enabled: !!toonId,
+  });
 
   const fetchPage = useCallback(
     async (pageParam: string): Promise<FetchPageResult> => {
@@ -38,6 +55,8 @@ const Episode = () => {
         toonId: Number(toonId),
         sort,
       } as RequestEpisodeListParams);
+
+      setTotal(data.total);
 
       return { data };
     },
@@ -105,7 +124,7 @@ const Episode = () => {
 
   if (!toonId) return null;
 
-  if (isError) {
+  if (isError || toonIsError) {
     return (
       <LayoutContainer isSpacing={false}>
         <div className="flex justify-center items-center min-h-[90vh]">
@@ -118,40 +137,53 @@ const Episode = () => {
   return (
     <LayoutContainer isSpacing={false}>
       <div className="space-y-6">
-        <div className="flex items-center justify-center w-full h-auto max-h-80 overflow-hidden">
-          {isLoading ? (
+        <div className="relative w-full h-auto max-h-60 overflow-hidden flex items-center justify-center">
+          {toonIsLoading ? (
             <Skeleton className="w-screen h-64" />
           ) : (
-            <Image
-              shadow="sm"
-              width="100%"
-              alt="banner"
-              className="w-full object-cover rounded-none"
-              src="https://pbs.twimg.com/media/D_Zo3S8UEAUxia-.jpg"
-            />
+            <>
+              <div
+                className="absolute inset-0 w-full h-full bg-cover bg-center blur-md"
+                style={{
+                  backgroundImage: `url(${toonDetailData?.data.thumbnailUrl})`,
+                }}
+              />
+              <Image
+                shadow="sm"
+                width="100%"
+                alt="banner"
+                className="relative z-10 w-auto h-auto max-h-80 object-contain"
+                src={toonDetailData?.data.thumbnailUrl}
+              />
+            </>
           )}
         </div>
 
         <div className="px-4 space-y-4 text-center">
-          {isLoading ? (
+          {toonIsLoading ? (
             <div className="flex flex-col justify-center items-center gap-2">
               <Skeleton className="w-48 h-7 rounded-lg" />
               <Skeleton className="w-32 h-5 rounded-lg" />
             </div>
           ) : (
             <div>
-              <h2 className="text-lg font-semibold">Gourmet Hound</h2>
+              <h2 className="text-lg font-semibold">
+                {toonDetailData?.data.title}
+              </h2>
               <Button
                 className="min-w-0 h-auto p-0"
                 variant="light"
                 onClick={handleWriterClick}
               >
-                <p className="text-sm text-gray-400 font-bold">leehama</p>
+                <p className="text-sm text-gray-400 font-bold">
+                  {toonDetailData?.data.author.firstName}{' '}
+                  {toonDetailData?.data.author.lastName}
+                </p>
               </Button>
             </div>
           )}
 
-          {isLoading ? (
+          {toonIsLoading ? (
             <div className="flex flex-col justify-center items-center gap-1">
               <Skeleton className="w-11/12 h-5 rounded-lg" />
               <Skeleton className="w-full h-5 rounded-lg" />
@@ -169,13 +201,7 @@ const Episode = () => {
                   isExpanded ? '' : 'line-clamp-1',
                 )}
               >
-                Lucy, a woman with an uncanny sense of taste and smell,
-                discovers that her favorite restaurant has changed kitchen
-                staff--and she does not know the identity of the chef whose
-                cooking she&apos;s loved for years. When a lucky accident leads
-                her to two former chefs at Dimanche, she decides that she will
-                do her utmost to track down each of their old colleagues in
-                order to rediscover that &quot;perfect taste&quot;.
+                {toonDetailData?.data.description}
               </p>
               <Button
                 className="min-w-6 h-6 !px-0 bg-transparent"
@@ -188,7 +214,7 @@ const Episode = () => {
           )}
 
           <div className="flex items-center justify-center gap-4">
-            {isLoading ? (
+            {toonIsLoading ? (
               <>
                 <Skeleton className="w-11 h-4 rounded-lg" />
                 <Skeleton className="w-11 h-4 rounded-lg" />
@@ -198,13 +224,17 @@ const Episode = () => {
                 <div className="flex items-center gap-1 text-gray-400">
                   <GrView className="text-gray-400" />
                   <span className="text-xs">
-                    {formatCompactNumber.format(17293200)}
+                    {formatCompactNumber.format(
+                      toonDetailData?.data.viewCount || 0,
+                    )}
                   </span>
                 </div>
                 <div className="flex items-center gap-1 text-gray-400">
                   <FaThumbsUp className="text-gray-400" />
                   <span className="text-xs">
-                    {formatCompactNumber.format(6293200)}
+                    {formatCompactNumber.format(
+                      toonDetailData?.data.likeCount || 0,
+                    )}
                   </span>
                 </div>
               </>
@@ -217,7 +247,7 @@ const Episode = () => {
             <Skeleton className="w-20 h-5 rounded-lg" />
           ) : (
             <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold">119 episodes</p>
+              <p className="text-sm font-semibold">{total} episodes</p>
               <Button
                 className="rotate-90 !w-auto !min-w-0 !h-auto !min-h-0 !px-0 !py-0"
                 onClick={() => setSort(sort === 'DESC' ? 'ASC' : 'DESC')}
