@@ -34,6 +34,7 @@ import type { TonProof } from 'types/wallet';
 
 import LayoutContainer from 'components/layout/LayoutContainer';
 import ComicsItem from 'components/Card';
+import { brandSymbol } from 'assets/images';
 
 const Profile = () => {
   const [tonConnectUI] = useTonConnectUI();
@@ -324,12 +325,16 @@ const Profile = () => {
                         <Avatar src="https://ton.org/download/ton_symbol.svg" />
                         {!isErrorAddressInfo ? (
                           <div className="flex flex-col gap-0.5">
-                            <p className="text-xl font-semibold">
-                              <span className="font-mono">
-                                {formatTon(+addressInfo.balance)}
-                              </span>{' '}
-                              <span className=" text-lg">TON</span>
-                            </p>
+                            <div className="flex flex-col">
+                              <span className="text-xs text-default-800">
+                                TON
+                              </span>
+                              <span className="text-lg font-mono font-semibold">
+                                {formatTon(
+                                  +addressInfo.balance,
+                                ).toLocaleString()}
+                              </span>
+                            </div>
                           </div>
                         ) : (
                           <p className="text-default-800">Failed to load TON</p>
@@ -340,17 +345,19 @@ const Profile = () => {
                     {jettonBalance &&
                       jettonBalance.jetton_wallets?.length > 0 && (
                         <div className="flex items-center gap-3">
-                          <Avatar src="https://ton.org/download/ton_symbol.svg" />
+                          <Avatar src={brandSymbol} />
                           {!isErrorJettonBalance ? (
                             <div className="flex flex-col gap-0.5">
-                              <p className="text-xl font-semibold">
-                                <span className="font-mono">
+                              <div className="flex flex-col">
+                                <span className="text-xs text-default-800">
+                                  WEBTON
+                                </span>
+                                <span className="text-lg font-mono font-semibold">
                                   {formatTon(
                                     +jettonBalance.jetton_wallets[0].balance,
-                                  )}
-                                </span>{' '}
-                                <span className=" text-lg">WEBTON</span>
-                              </p>
+                                  ).toLocaleString()}
+                                </span>
+                              </div>
                             </div>
                           ) : (
                             <p className="text-default-800">
