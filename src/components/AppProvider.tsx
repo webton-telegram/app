@@ -24,7 +24,7 @@ const AppProvider = ({ children }: Props) => {
   return (
     <AuthProvider>
       <TonConnectUIProvider
-        manifestUrl={`${import.meta.env.VITE_HOST}/tonconnect-manifest${import.meta.env.DEV ? '-local' : ''}.json`}
+        manifestUrl={`${import.meta.env.VITE_HOST}/tonconnect-manifest.json`}
       >
         <QueryClientProvider client={queryClient}>
           <NextUIProvider>
