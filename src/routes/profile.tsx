@@ -118,8 +118,10 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    updateSession();
-  }, [updateSession]);
+    if (session) {
+      updateSession();
+    }
+  }, [session, updateSession]);
 
   useEffect(() => {
     if (!connectionRestored) {
@@ -310,6 +312,7 @@ const Profile = () => {
                 <Button
                   color="success"
                   isLoading={isConnecting}
+                  disabled={status === 'unauthenticated'}
                   onClick={handleConnect}
                 >
                   {isConnecting ? 'Connecting' : 'Connect wallet'}

@@ -2,7 +2,7 @@ import { createContext } from 'react';
 import type { ResultAuthData } from 'types/auth';
 
 type AuthState = {
-  status: 'loading' | 'authenticated';
+  status: 'loading' | 'authenticated' | 'unauthenticated';
   session?: ResultAuthData;
   update: () => Promise<void>;
 };

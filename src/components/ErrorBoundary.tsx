@@ -1,6 +1,8 @@
 import { Button } from '@nextui-org/react';
 import { useNavigate, useRouteError } from 'react-router-dom';
 
+import { brand } from 'assets/images';
+
 const ErrorBoundary = () => {
   const error = useRouteError();
 
@@ -28,7 +30,7 @@ const ErrorBoundary = () => {
       </div>
 
       <div className="flex flex-col gap-2 select-none">
-        <p className="flex items-end gap-0.5 text-xl tracking-wide">WEBTON</p>
+        <img src={brand} alt="WebTON" className="w-[90px]" />
       </div>
     </div>
   );
